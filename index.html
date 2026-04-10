@@ -23,6 +23,7 @@
 }
 html,body{height:100%;overflow:hidden}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column}
+/* ── TOPBAR ── */
 .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50}
 .topbar-left{display:flex;align-items:center;gap:10px}
 .shop-logo{width:34px;height:34px;border-radius:var(--r8);object-fit:cover}
@@ -34,7 +35,13 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 .sync-dot.off{background:var(--text3)}
 .sync-dot.syncing{background:var(--accent);animation:pulse .8s infinite}
 .clock{font-size:11px;color:var(--text2);font-family:'DM Mono',monospace;text-align:right;line-height:1.4}
+/* ── USER CHIP ── */
+.user-chip{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:4px 10px 4px 6px;cursor:pointer;transition:border .2s}
+.user-chip:hover{border-color:var(--accent)}
+.user-avatar{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.user-chip-name{font-size:11px;font-weight:600;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+/* ── LAYOUT ── */
 .content{flex:1;overflow:hidden;position:relative}
 .page{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;display:none;padding-bottom:calc(var(--nav-h) + var(--safe-bottom) + 8px)}
 .page.active{display:block}
@@ -43,6 +50,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 .bn-item.active{color:var(--accent)}
 .bn-item .bi{font-size:20px;line-height:1}
 .bn-badge{position:absolute;top:8px;right:calc(50% - 14px);background:var(--red);color:#fff;font-size:9px;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px}
+/* ── POS ── */
 #page-pos{padding-bottom:0}
 .pos-wrap{display:flex;flex-direction:column;height:100%;overflow:hidden}
 .pos-top{flex-shrink:0;background:var(--bg);padding:12px 16px 0}
@@ -67,6 +75,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 .pc-name{font-size:12px;font-weight:500;color:var(--text);margin-bottom:4px;line-height:1.3}
 .pc-price{font-size:14px;font-weight:700;color:var(--accent);font-family:'DM Mono',monospace}
 .pc-stock{font-size:10px;color:var(--text3);margin-top:2px}
+/* ── CART ── */
 .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:200;pointer-events:none;transition:background .3s}
 .cart-overlay.open{background:rgba(0,0,0,.6);pointer-events:all}
 .cart-sheet{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-radius:var(--r20) var(--r20) 0 0;z-index:201;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);max-height:92vh;display:flex;flex-direction:column}
@@ -106,6 +115,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 .checkout-btn{width:100%;padding:15px;background:var(--accent);color:#0d1117;font-size:15px;font-weight:700;border:none;border-radius:var(--r12);cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s}
 .checkout-btn:disabled{opacity:.4;cursor:not-allowed}
 .checkout-btn:active:not(:disabled){transform:scale(.98)}
+/* ── PAGES ── */
 .page-pad{padding:16px}
 .pg-title{font-size:18px;font-weight:700;margin-bottom:16px}
 .toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;flex-wrap:wrap}
@@ -118,12 +128,14 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 .btn-ghost:active{border-color:var(--accent);color:var(--accent)}
 .btn-danger{background:var(--red-dim);border-color:var(--red);color:var(--red)}
 .btn-success{background:var(--green-dim);border-color:var(--green);color:var(--green)}
+/* ── STATS ── */
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 @media(min-width:600px){.stat-grid{grid-template-columns:repeat(4,1fr)}}
 .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r12);padding:14px 16px}
 .stat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
 .stat-v{font-size:20px;font-weight:700;font-family:'DM Mono',monospace}
 .c-green{color:var(--green)}.c-amber{color:var(--accent)}.c-blue{color:var(--blue)}
+/* ── LIST CARDS ── */
 .card-list{display:flex;flex-direction:column;gap:10px}
 .list-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r12);padding:14px 16px;cursor:pointer;transition:border .2s}
 .list-card:active{border-color:var(--accent)}
@@ -143,12 +155,14 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 .icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px}
 .icon-btn:active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
 .icon-btn.del:active{border-color:var(--red);color:var(--red);background:var(--red-dim)}
+/* ── BADGES ── */
 .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500}
 .b-green{background:var(--green-dim);color:var(--green)}
 .b-red{background:var(--red-dim);color:var(--red)}
 .b-amber{background:var(--accent-dim);color:var(--accent)}
 .b-blue{background:var(--blue-dim);color:var(--blue)}
 .b-purple{background:var(--purple-dim);color:var(--purple)}
+/* ── MODAL ── */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;display:flex;align-items:flex-end;justify-content:center}
 .modal-bg.hidden{display:none}
 .modal{background:var(--bg2);border-radius:var(--r20) var(--r20) 0 0;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
@@ -164,13 +178,16 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 .finput::placeholder{color:var(--text3)}
 .fselect{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r8);padding:11px 14px;color:var(--text);font-size:14px;font-family:'Outfit',sans-serif;outline:none}
 .f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* ── RETURNS ── */
 .return-item{display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg3);border-radius:var(--r12);margin-bottom:8px;border:1px solid var(--border)}
 .ri-check{width:20px;height:20px;accent-color:var(--accent);flex-shrink:0;cursor:pointer}
+/* ── SETTINGS ── */
 .settings-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r16);padding:16px;margin-bottom:14px}
 .ss-title{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:7px}
 .logo-drop{border:2px dashed var(--border2);border-radius:var(--r12);padding:20px;text-align:center;cursor:pointer;transition:all .2s}
 .logo-drop:active{border-color:var(--accent);background:var(--accent-dim)}
 .logo-prev{max-width:100px;max-height:60px;object-fit:contain;border-radius:var(--r8);margin-bottom:8px}
+/* ── PRINT ── */
 #printArea{display:none}
 @media print{
   @page{margin:0}
@@ -178,6 +195,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
   #printArea,#printArea *{visibility:visible!important}
   #printArea{display:block!important;position:fixed!important;top:0!important;left:0!important;width:100%!important;background:#fff!important;color:#000!important;padding:0!important}
 }
+/* ── TOAST ── */
 .toast{position:fixed;bottom:calc(var(--nav-h) + var(--safe-bottom) + 12px);left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r12);padding:10px 18px;font-size:13px;font-weight:500;z-index:500;white-space:nowrap;animation:fadeUp .25s ease}
 .toast.s{border-color:rgba(63,185,80,.5);color:var(--green);background:var(--green-dim)}
 .toast.e{border-color:rgba(248,81,73,.5);color:var(--red);background:var(--red-dim)}
@@ -185,25 +203,49 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 .empty{text-align:center;padding:48px 24px;color:var(--text3)}
 .empty-icon{font-size:44px;margin-bottom:10px;opacity:.3}
+/* ── SYNC BOX ── */
 .sync-box{border-radius:var(--r8);padding:10px 14px;font-size:12px;font-weight:500;margin-top:10px;display:flex;align-items:center;gap:8px}
 .sync-box.ok{background:var(--green-dim);color:var(--green)}
 .sync-box.err{background:var(--red-dim);color:var(--red)}
 .sync-box.info{background:var(--blue-dim);color:var(--blue)}
+/* ── SPINNER ── */
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .guide{background:var(--bg3);border-radius:var(--r12);padding:14px;font-size:12px;color:var(--text2);line-height:1.7;margin-top:12px}
 .guide strong{color:var(--text);font-size:13px}
+/* ── BT PRINTER ── */
 .bt-status-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r8);border:1px solid var(--border);background:var(--bg3);margin-bottom:10px}
 .bt-dot{width:10px;height:10px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background .3s}
 .bt-dot.connected{background:var(--green);box-shadow:0 0 6px rgba(63,185,80,.5)}
 .bt-dot.scanning{background:var(--accent);animation:pulse .7s infinite}
 .bt-dot.error{background:var(--red)}
-.bt-name{flex:1;font-size:13px;font-weight:500}
-.bt-sub{font-size:10px;color:var(--text3);margin-top:1px}
 .bt-test-receipt{border:1px dashed var(--border2);border-radius:var(--r8);padding:10px;font-family:'Courier New',monospace;font-size:11px;color:var(--text2);background:var(--bg);margin-top:8px;white-space:pre;overflow-x:auto;max-height:200px;overflow-y:auto}
 .print-fab{position:fixed;bottom:calc(var(--nav-h) + var(--safe-bottom) + 14px);right:16px;width:48px;height:48px;border-radius:50%;background:var(--blue);border:none;color:#fff;font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(88,166,255,.4);z-index:100;transition:transform .2s}
 .print-fab.show{display:flex}
 .print-fab:active{transform:scale(.92)}
+/* ── USER MANAGEMENT ── */
+.user-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg3);border-radius:var(--r12);border:1px solid var(--border);margin-bottom:8px}
+.user-row.active-user{border-color:var(--accent);background:var(--accent-dim)}
+.ur-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0}
+.ur-info{flex:1;min-width:0}
+.ur-name{font-size:14px;font-weight:600}
+.ur-role{font-size:11px;color:var(--text2);margin-top:2px}
+.ur-actions{display:flex;gap:6px}
+.role-tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
+.role-admin{background:rgba(240,165,0,.15);color:var(--accent)}
+.role-cashier{background:var(--blue-dim);color:var(--blue)}
+.role-manager{background:var(--purple-dim);color:var(--purple)}
+/* ── PRODUCT DUPLICATE SEARCH ── */
+.dup-results{margin-top:10px;display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto}
+.dup-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border-radius:var(--r8);border:1px solid var(--border);cursor:pointer;transition:border .15s}
+.dup-item:hover{border-color:var(--accent)}
+.dup-item.selected{border-color:var(--accent);background:var(--accent-dim)}
+.dup-info{flex:1}
+.dup-name{font-size:13px;font-weight:500}
+.dup-meta{font-size:11px;color:var(--text2);margin-top:2px}
+/* ── SEPARATOR ── */
+.or-sep{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--text3);font-size:11px;font-weight:500}
+.or-sep::before,.or-sep::after{content:'';flex:1;height:1px;background:var(--border)}
 </style>
 </head>
 <body>
@@ -217,6 +259,10 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
     </div>
   </div>
   <div class="topbar-right">
+    <div class="user-chip" onclick="openM('userSwitchModal')" id="userChip">
+      <div class="user-avatar" id="topUserAvatar" style="background:var(--accent-dim);color:var(--accent)">👤</div>
+      <span class="user-chip-name" id="topUserName">Guest</span>
+    </div>
     <div class="sync-dot off" id="syncDot" title="Sheets sync status"></div>
     <div class="clock" id="clock">--</div>
   </div>
@@ -224,6 +270,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 
 <div class="content">
 
+<!-- POS PAGE -->
 <div class="page active" id="page-pos">
 <div class="pos-wrap" style="height:100%;display:flex;flex-direction:column;overflow:hidden">
   <div class="pos-top" style="flex-shrink:0;padding:12px 16px 0">
@@ -239,12 +286,13 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 </div>
 </div>
 
+<!-- PRODUCTS PAGE -->
 <div class="page" id="page-products">
   <div class="page-pad">
     <div class="toolbar">
       <div class="pg-title" style="margin:0">📦 Products</div>
       <div class="toolbar-right">
-        <button class="btn btn-ghost btn-sm" onclick="pullProducts()"><span class="spinner" id="pullSpinner" style="display:none"></span>☁ Sync</button>
+        <button class="btn btn-ghost btn-sm" onclick="gasPull()"><span class="spinner" id="pullSpinner" style="display:none"></span>☁ Sync</button>
         <button class="btn btn-primary btn-sm" onclick="openAddProd()">+ Add</button>
       </div>
     </div>
@@ -255,6 +303,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
   </div>
 </div>
 
+<!-- RETURNS PAGE -->
 <div class="page" id="page-returns">
   <div class="page-pad">
     <div class="pg-title">↩ Returns</div>
@@ -270,6 +319,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
   </div>
 </div>
 
+<!-- BILLS PAGE -->
 <div class="page" id="page-bills">
   <div class="page-pad">
     <div class="toolbar">
@@ -281,6 +331,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
   </div>
 </div>
 
+<!-- SETTINGS PAGE -->
 <div class="page" id="page-settings">
   <div class="page-pad">
     <div class="pg-title">⚙ Settings</div>
@@ -369,17 +420,15 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
       </div>
     </div>
 
-    <!-- ══════ GOOGLE SHEETS SECTION ══════ -->
+    <!-- GOOGLE SHEETS SECTION -->
     <div class="settings-section">
       <div class="ss-title">📊 Google Sheets — Apps Script Mode</div>
-
-      <!-- Mode tabs -->
       <div style="display:flex;gap:0;margin-bottom:16px;border-radius:var(--r8);overflow:hidden;border:1px solid var(--border)">
         <div id="modeTabGas" style="flex:1;padding:8px 4px;font-size:11px;font-weight:600;text-align:center;background:var(--accent-dim);color:var(--accent);cursor:pointer;border-right:1px solid var(--border)" onclick="switchMode('gas')">⚡ Apps Script</div>
         <div id="modeTabOauth" style="flex:1;padding:8px 4px;font-size:11px;font-weight:600;text-align:center;background:var(--bg3);color:var(--text3);cursor:pointer" onclick="switchMode('oauth')">🔐 OAuth Direct</div>
       </div>
 
-      <!-- ── APPS SCRIPT MODE ── -->
+      <!-- APPS SCRIPT MODE -->
       <div id="gasModePanel">
         <div class="guide" style="margin-bottom:14px">
           <strong>⚡ Easiest Setup — No OAuth needed!</strong><br>
@@ -410,9 +459,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
         <div class="sync-box info" id="gasStatus" style="margin-top:12px">ℹ Paste your Web App URL above → Save Config.</div>
       </div>
 
-      <!-- ── OAUTH DIRECT MODE ── -->
+      <!-- OAUTH DIRECT MODE -->
       <div id="oauthModePanel" style="display:none">
-        <!-- Step indicator -->
         <div style="display:flex;gap:0;margin-bottom:16px;border-radius:var(--r8);overflow:hidden;border:1px solid var(--border)">
           <div id="step1ind" style="flex:1;padding:7px 4px;font-size:10px;font-weight:600;text-align:center;background:var(--accent-dim);color:var(--accent);border-right:1px solid var(--border)">1 · Config</div>
           <div id="step2ind" style="flex:1;padding:7px 4px;font-size:10px;font-weight:600;text-align:center;background:var(--bg3);color:var(--text3);border-right:1px solid var(--border)">2 · Sign In</div>
@@ -421,13 +469,12 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
         <div class="fg">
           <label class="flabel">① Google OAuth Client ID</label>
           <input class="finput" id="s-clientId" placeholder="xxxx.apps.googleusercontent.com" oninput="validateSheetInputs()">
-          <div style="font-size:10px;color:var(--text3);margin-top:3px">From Google Cloud Console → APIs &amp; Services → Credentials</div>
         </div>
         <div class="fg">
           <label class="flabel">② Spreadsheet ID or Full URL</label>
           <div style="display:flex;gap:6px">
             <input class="finput" id="s-sheetId" placeholder="Paste full URL or just the ID" oninput="autoExtractSheetId()" style="flex:1">
-            <button class="btn btn-ghost btn-sm" onclick="autoExtractSheetId()" style="flex-shrink:0;white-space:nowrap">✂ Extract</button>
+            <button class="btn btn-ghost btn-sm" onclick="autoExtractSheetId()" style="flex-shrink:0">✂ Extract</button>
           </div>
           <div id="sheetIdPreview" style="font-size:10px;margin-top:4px;padding:6px 10px;border-radius:6px;display:none"></div>
         </div>
@@ -443,7 +490,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
           <div style="display:flex;gap:8px">
             <button class="btn btn-ghost" style="flex:1" id="setupHdrBtn" onclick="setupHeaders()" disabled>📋 Setup Headers</button>
             <button class="btn btn-ghost" style="flex:1" id="pushAllBtn" onclick="pushAll()" disabled>⬆ Push All</button>
-            <button class="btn btn-ghost" style="flex:1" id="pullProdBtn" onclick="pullProducts()" disabled><span class="spinner" id="pullSpinner2" style="display:none"></span>⬇ Pull</button>
+            <button class="btn btn-ghost" style="flex:1" id="pullProdBtn" onclick="pullProducts()" disabled>⬇ Pull</button>
           </div>
         </div>
         <div class="sync-box info" id="syncStatus" style="margin-top:12px">ℹ Paste your Spreadsheet URL or ID above, then tap Save Config.</div>
@@ -451,19 +498,24 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
           <strong>⚠ Common errors:</strong><br>
           <span style="color:var(--red)">redirect_uri_mismatch</span> → Add this exact URL to Authorised JavaScript Origins:<br>
           <code id="originDisplay" style="display:inline-block;margin-top:3px;margin-bottom:3px;background:var(--bg4);border:1px solid var(--border2);padding:3px 8px;border-radius:5px;color:var(--accent);font-size:11px;word-break:break-all;cursor:pointer" onclick="copyOrigin()" title="Tap to copy"></code>
-          <span id="originCopyHint" style="font-size:10px;color:var(--text3);margin-left:4px">(tap to copy)</span><br>
-          <span style="color:var(--red)">403 forbidden</span> → Share the Google Sheet with your account (Editor)<br>
-          <span style="color:var(--red)">access_blocked</span> → Add your email as a Test User in OAuth consent screen
+          <span id="originCopyHint" style="font-size:10px;color:var(--text3);margin-left:4px">(tap to copy)</span>
         </div>
       </div>
     </div>
+
+    <!-- USERS SECTION -->
+    <div class="settings-section">
+      <div class="ss-title">👥 Staff Users</div>
+      <div id="userListSettings"></div>
+      <button class="btn btn-primary btn-sm" style="margin-top:4px;width:100%" onclick="openAddUser()">+ Add Staff User</button>
+    </div>
+
   </div>
 </div>
 
+</div><!-- /content -->
 
 <button class="print-fab" id="printFab" title="Print last bill" onclick="btPrintLastBill()">🖨</button>
-
-</div><!-- /content -->
 
 <nav class="bottom-nav">
   <button class="bn-item active" id="bn-pos" onclick="goPage('pos')"><span class="bi">🛒</span>POS</button>
@@ -473,6 +525,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
   <button class="bn-item" id="bn-settings" onclick="goPage('settings')"><span class="bi">⚙</span>Settings</button>
 </nav>
 
+<!-- Cart Sheet -->
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
 <div class="cart-sheet" id="cartSheet">
   <div class="sheet-drag" onclick="closeCart()"></div>
@@ -506,6 +559,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
   </div>
 </div>
 
+<!-- ══ PRODUCT MODAL (with duplicate search) ══ -->
 <div class="modal-bg hidden" id="prodModal">
   <div class="modal">
     <div class="modal-head">
@@ -513,6 +567,16 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
       <button class="modal-close" onclick="closeM('prodModal')">✕</button>
     </div>
     <div class="modal-body">
+      <!-- Duplicate search section (visible only on Add) -->
+      <div id="dupSearchSection">
+        <div class="fg">
+          <label class="flabel">🔍 Search Existing Products First</label>
+          <input class="finput" id="dupSearchInput" placeholder="Type to find existing product..." oninput="searchDuplicates(this.value)">
+          <div id="dupResults" class="dup-results" style="display:none"></div>
+        </div>
+        <div class="or-sep">OR ADD NEW</div>
+      </div>
+
       <input type="hidden" id="p-id">
       <div class="f2">
         <div class="fg"><label class="flabel">Emoji</label><input class="finput" id="p-emoji" placeholder="🍽️" maxlength="4" style="font-size:20px;text-align:center"></div>
@@ -528,6 +592,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
   </div>
 </div>
 
+<!-- ══ BILL MODAL ══ -->
 <div class="modal-bg hidden" id="billModal">
   <div class="modal">
     <div class="modal-head">
@@ -538,26 +603,128 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
   </div>
 </div>
 
+<!-- ══ USER SWITCH MODAL ══ -->
+<div class="modal-bg hidden" id="userSwitchModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">👥 Switch User</div>
+      <button class="modal-close" onclick="closeM('userSwitchModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:12px">Select your staff profile to log in</div>
+      <div id="userSwitchList"></div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+        <button class="btn btn-ghost" style="width:100%" onclick="closeM('userSwitchModal');openAddUser()">+ Add New Staff User</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ADD/EDIT USER MODAL ══ -->
+<div class="modal-bg hidden" id="userModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="userModalTitle">Add Staff User</div>
+      <button class="modal-close" onclick="closeM('userModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="u-id">
+      <div class="fg">
+        <label class="flabel">Full Name</label>
+        <input class="finput" id="u-name" placeholder="e.g. Kasun Perera">
+      </div>
+      <div class="f2">
+        <div class="fg">
+          <label class="flabel">Role</label>
+          <select class="fselect" id="u-role">
+            <option value="cashier">Cashier</option>
+            <option value="manager">Manager</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="flabel">Avatar Emoji</label>
+          <input class="finput" id="u-avatar" placeholder="👤" maxlength="2" style="font-size:22px;text-align:center">
+        </div>
+      </div>
+      <div class="fg">
+        <label class="flabel">PIN (4 digits, optional)</label>
+        <input class="finput" id="u-pin" type="password" placeholder="Leave blank for no PIN" maxlength="4" inputmode="numeric">
+      </div>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn btn-primary" style="flex:1" onclick="saveUser()">Save User</button>
+        <button class="btn btn-danger btn-sm" id="delUserBtn" onclick="deleteCurrentEditUser()" style="display:none">🗑 Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PIN ENTRY MODAL ══ -->
+<div class="modal-bg hidden" id="pinModal">
+  <div class="modal" style="max-width:320px">
+    <div class="modal-head">
+      <div class="modal-title">🔒 Enter PIN</div>
+      <button class="modal-close" onclick="closeM('pinModal')">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center">
+      <div id="pinUserName" style="font-size:20px;margin-bottom:4px"></div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:20px" id="pinUserRole"></div>
+      <div style="display:flex;justify-content:center;gap:10px;margin-bottom:20px" id="pinDots">
+        <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--border2)" id="pd0"></div>
+        <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--border2)" id="pd1"></div>
+        <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--border2)" id="pd2"></div>
+        <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--border2)" id="pd3"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:240px;margin:0 auto">
+        ${[1,2,3,4,5,6,7,8,9,'','0','⌫'].map(k=>`<button onclick="pinKey('${k}')" style="padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r8);font-size:18px;font-weight:600;cursor:pointer;color:var(--text);font-family:'Outfit',sans-serif;transition:all .1s" ${k===''?'disabled style="padding:14px;background:transparent;border:none;cursor:default;font-size:18px"':''}>${k}</button>`).join('')}
+      </div>
+      <div id="pinError" style="color:var(--red);font-size:12px;margin-top:12px;min-height:16px"></div>
+    </div>
+  </div>
+</div>
+
 <div id="printArea"></div>
 
 <script>
 // ══════════ STATE ══════════
-let S={products:[],bills:[],returns:[],settings:{},cart:[],payment:'cash',billN:1,retN:1,activeCat:'All',gToken:null,editing:null,gasConnected:false};
+let S={products:[],bills:[],returns:[],settings:{},cart:[],users:[],activeUser:null,payment:'cash',billN:1,retN:1,activeCat:'All',gToken:null,editing:null,gasConnected:false,editingUser:null,pinTarget:null,pinBuffer:''};
+
+const ROLE_COLORS={admin:'var(--accent)',manager:'var(--purple)',cashier:'var(--blue)'};
+const ROLE_LABELS={admin:'Admin',manager:'Manager',cashier:'Cashier'};
 
 // ══════════ BOOT ══════════
 function boot(){
   load();
   tick();setInterval(tick,1000);
-  renderCats();renderProdGrid();renderProdList();renderBills();renderRets();applySettings();
-  fillCatDL();
+  renderCats();renderProdGrid();renderProdList();renderBills();renderRets();
+  applySettings();fillCatDL();
   if(S.settings.tax)document.getElementById('taxIn').value=S.settings.tax;
-  calcTotals();
-  applyBtSettings();
+  calcTotals();applyBtSettings();
   const od=document.getElementById('originDisplay');
   if(od)od.textContent=location.origin;
-  // Auto-connect on every load — immediate + retry
+  // Populate GAS fields from saved settings
+  populateGasFields();
+  updateUserChip();
+  renderUserListSettings();
+  // Mode tab init
+  switchMode(S.settings.syncMode||'gas');
+  // Auto-connect GAS
   gasAutoConnect();
   setInterval(()=>{if(!S.gasConnected)gasAutoConnect();},30000);
+}
+
+// ══════════ POPULATE GAS FIELDS (FIX: fields always loaded from settings) ══════════
+function populateGasFields(){
+  const s=S.settings;
+  const urlEl=document.getElementById('gas-url');
+  const gpEl=document.getElementById('gas-pSheet');
+  const gbEl=document.getElementById('gas-bSheet');
+  const grEl=document.getElementById('gas-rSheet');
+  if(urlEl)urlEl.value=s.gasUrl||GAS_DEFAULT_URL;
+  if(gpEl)gpEl.value=s.gasPSheet||'Products';
+  if(gbEl)gbEl.value=s.gasBSheet||'Bills';
+  if(grEl)grEl.value=s.gasRSheet||'Returns';
+  gasValidate();
 }
 
 function copyOrigin(){
@@ -575,15 +742,18 @@ function load(){
     S.bills=JSON.parse(localStorage.getItem('hpos_b')||'[]');
     S.returns=JSON.parse(localStorage.getItem('hpos_r')||'[]');
     S.settings=JSON.parse(localStorage.getItem('hpos_s')||'null')||defSettings();
+    S.users=JSON.parse(localStorage.getItem('hpos_u')||'null')||defUsers();
+    S.activeUser=JSON.parse(localStorage.getItem('hpos_au')||'null');
     S.billN=parseInt(localStorage.getItem('hpos_bn')||'1');
     S.retN=parseInt(localStorage.getItem('hpos_rn')||'1');
-  }catch(e){S.products=defProds();S.bills=[];S.returns=[];S.settings=defSettings();}
-  // Always ensure GAS URL is set (even on first load / after clear)
-  if(!S.settings.gasUrl)S.settings.gasUrl=GAS_DEFAULT_URL;
-  if(!S.settings.gasPSheet)S.settings.gasPSheet='Products';
-  if(!S.settings.gasBSheet)S.settings.gasBSheet='Bills';
-  if(!S.settings.gasRSheet)S.settings.gasRSheet='Returns';
-  if(!S.settings.syncMode)S.settings.syncMode='gas';
+  }catch(e){S.products=defProds();S.bills=[];S.returns=[];S.settings=defSettings();S.users=defUsers();S.activeUser=null;}
+  // Ensure all required settings keys exist
+  const ds=defSettings();
+  Object.keys(ds).forEach(k=>{if(S.settings[k]===undefined)S.settings[k]=ds[k];});
+  // Ensure default admin if no users
+  if(!S.users||!S.users.length)S.users=defUsers();
+  // Restore active user or pick first admin
+  if(!S.activeUser&&S.users.length)S.activeUser=S.users.find(u=>u.role==='admin')||S.users[0];
 }
 
 function save(){
@@ -591,12 +761,21 @@ function save(){
   localStorage.setItem('hpos_b',JSON.stringify(S.bills));
   localStorage.setItem('hpos_r',JSON.stringify(S.returns));
   localStorage.setItem('hpos_s',JSON.stringify(S.settings));
+  localStorage.setItem('hpos_u',JSON.stringify(S.users));
+  localStorage.setItem('hpos_au',JSON.stringify(S.activeUser));
   localStorage.setItem('hpos_bn',S.billN);
   localStorage.setItem('hpos_rn',S.retN);
 }
 
 const GAS_DEFAULT_URL='https://script.google.com/macros/s/AKfycbwMkYvyUhzE9QssX_8AtxVnu0BDaPWq1qfXPU1PEJqHddeFdDrEjXTAlzH7KVTGMwu-/exec';
+
 function defSettings(){return{name:'Grand Hotel',sub:'Restaurant & Bar',addr:'No.1 Main St, Colombo',phone:'+94 11 234 5678',cur:'LKR',tax:'10',footer:'Thank you for visiting!',clientId:'',sheetId:'',pSheet:'Products',bSheet:'Bills',rSheet:'Returns',logo:'',printSize:'a4',btAutoPrint:false,btPaperWidth:'48',gasUrl:GAS_DEFAULT_URL,gasPSheet:'Products',gasBSheet:'Bills',gasRSheet:'Returns',syncMode:'gas'};}
+
+function defUsers(){return[
+  {id:'U001',name:'Admin',role:'admin',avatar:'👑',pin:'',color:'#f0a500'},
+  {id:'U002',name:'Cashier',role:'cashier',avatar:'💳',pin:'',color:'#58a6ff'},
+];}
+
 function defProds(){return[
   {id:'P001',emoji:'🍛',name:'Rice & Curry',cat:'Food',price:550,stock:50},
   {id:'P002',emoji:'🍔',name:'Beef Burger',cat:'Food',price:890,stock:30},
@@ -618,27 +797,26 @@ function applySettings(){
   document.getElementById('topSub').textContent=s.sub||'';
   if(s.logo){
     const el=document.getElementById('topLogo');
-    el.outerHTML=`<img class="shop-logo" id="topLogo" src="${s.logo}" alt="logo">`;
-    document.getElementById('logoPrev').src=s.logo;
-    document.getElementById('logoPrev').style.display='block';
-    document.getElementById('logoTxt').style.display='none';
+    if(el&&el.tagName!=='IMG'){el.outerHTML=`<img class="shop-logo" id="topLogo" src="${s.logo}" alt="logo">`;}
+    else if(el){el.src=s.logo;}
+    const lp=document.getElementById('logoPrev');const lt=document.getElementById('logoTxt');
+    if(lp){lp.src=s.logo;lp.style.display='block';}
+    if(lt)lt.style.display='none';
   }
   const fm={name:'s-name',sub:'s-sub',addr:'s-addr',phone:'s-phone',cur:'s-cur',tax:'s-tax',footer:'s-footer',clientId:'s-clientId',sheetId:'s-sheetId',pSheet:'s-pSheet',bSheet:'s-bSheet',rSheet:'s-rSheet'};
   Object.entries(fm).forEach(([k,id])=>{const el=document.getElementById(id);if(el)el.value=s[k]||'';});
   const psEl=document.getElementById('s-printSize');
   if(psEl&&s.printSize)psEl.value=s.printSize;
   document.getElementById('syncDot').className='sync-dot'+(S.settings.sheetId&&S.gToken?'':' off');
-  // Restore Google Sheets button states
   if(s.clientId&&s.sheetId){
-    document.getElementById('authGoogleBtn').disabled=false;
+    const ab=document.getElementById('authGoogleBtn');if(ab)ab.disabled=false;
     setStep(S.gToken?3:2);
   }
   if(S.gToken){
-    ['testConnBtn','setupHdrBtn','pushAllBtn','pullProdBtn'].forEach(id=>{
-      const el=document.getElementById(id);if(el)el.disabled=false;
-    });
+    ['testConnBtn','setupHdrBtn','pushAllBtn','pullProdBtn'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=false;});
   }
   applyBtSettings();
+  populateGasFields();
 }
 
 function C(){return S.settings.cur||'LKR';}
@@ -656,9 +834,10 @@ function goPage(p){
   if(p==='bills')renderBills();
   if(p==='products')renderProdList();
   if(p==='returns')renderRets();
-  if(p==='settings')applySettings();
+  if(p==='settings'){applySettings();renderUserListSettings();}
 }
 
+// ══════════ CATEGORIES & PRODUCTS ══════════
 function cats(){return['All',...new Set(S.products.map(p=>p.cat).filter(Boolean))];}
 function renderCats(){
   const el=document.getElementById('catScroll');
@@ -680,14 +859,14 @@ function renderProdGrid(){
   </div>`).join('');
 }
 
+// ══════════ CART ══════════
 function addToCart(id){
   const p=S.products.find(x=>x.id===id);
   if(!p||p.stock<=0)return;
   const ex=S.cart.find(x=>x.id===id);
   if(ex){if(ex.qty>=p.stock){toast('Max stock reached','e');return;}ex.qty++;}
   else S.cart.push({id,name:p.name,emoji:p.emoji||'📦',price:p.price,qty:1});
-  renderCart();calcTotals();
-  toast(`${p.name} added`,'s');
+  renderCart();calcTotals();toast(`${p.name} added`,'s');
 }
 function changeQty(id,d){
   const it=S.cart.find(x=>x.id===id);if(!it)return;
@@ -754,13 +933,14 @@ function checkout(){
   const tp=parseFloat(document.getElementById('taxIn').value)||0;
   const disc=sub*(dp/100);const tax=(sub-disc)*(tp/100);const total=(sub-disc)+tax;
   const billNo='BILL-'+String(S.billN).padStart(4,'0');S.billN++;
-  const bill={billNo,date:new Date().toISOString(),items:[...S.cart],sub,dp,disc,tp,tax,total,pay:S.payment};
+  const bill={
+    billNo,date:new Date().toISOString(),items:[...S.cart],sub,dp,disc,tp,tax,total,pay:S.payment,
+    cashier:(S.activeUser?S.activeUser.name:'—')
+  };
   S.bills.unshift(bill);
   S.cart.forEach(ci=>{const p=S.products.find(x=>x.id===ci.id);if(p)p.stock=Math.max(0,p.stock-ci.qty);});
-  save();
-  closeCart();
-  if(S.settings.btAutoPrint&&BT.char){btPrint(bill);}
-  else{printBill(bill);}
+  save();closeCart();
+  if(S.settings.btAutoPrint&&BT.char){btPrint(bill);}else{printBill(bill);}
   S.cart=[];renderCart();calcTotals();renderProdGrid();
   document.getElementById('discIn').value='';
   document.getElementById('taxIn').value=S.settings.tax||'';
@@ -774,7 +954,6 @@ function printBill(bill){
   if(BT.device&&BT.char){btPrint(bill);return;}
   const sz=getPrintSize();
   const area=document.getElementById('printArea');
-  area.className='ps-'+sz;
   area.innerHTML=buildReceiptHTML(bill,sz);
   const styleId='__psize__';
   let st=document.getElementById(styleId);
@@ -794,6 +973,7 @@ function buildReceiptHTML(bill,size){
   const fBase=isA4?'13px':'11px';
   const fHeader=isA4?'18px':'14px';
   const pad=isA4?'24px':'8px';
+  const cashierLine=bill.cashier?`<div style="margin-bottom:8px"><b>Cashier:</b> ${bill.cashier}</div>`:'';
   return`<div style="font-family:'Courier New',monospace;font-size:${fBase};line-height:1.75;color:#111;max-width:${maxW};margin:0 auto;padding:${pad};box-sizing:border-box">
     ${logo}
     <div style="text-align:center;border-bottom:1px dashed #999;padding-bottom:10px;margin-bottom:10px">
@@ -806,7 +986,8 @@ function buildReceiptHTML(bill,size){
       <span><b>Bill No:</b> ${bill.billNo}</span>
       <span>${new Date(bill.date).toLocaleString()}</span>
     </div>
-    <div style="margin-bottom:8px"><b>Payment:</b> ${bill.pay.toUpperCase()}</div>
+    <div style="margin-bottom:4px"><b>Payment:</b> ${bill.pay.toUpperCase()}</div>
+    ${cashierLine}
     ${isA4?`
     <table style="width:100%;font-size:${fBase};border-collapse:collapse;margin-bottom:8px">
       <thead><tr style="border-bottom:2px solid #333">
@@ -825,7 +1006,7 @@ function buildReceiptHTML(bill,size){
       </tr>`).join('')}</tbody>
     </table>
     <div style="display:flex;justify-content:flex-end">
-      <div style="min-width:300px;font-size:${fBase}">
+      <div style="min-width:300px">
         <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee"><span>Subtotal</span><span>${cur} ${bill.sub.toFixed(2)}</span></div>
         ${bill.disc>0?`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee"><span>Discount (${bill.dp}%)</span><span style="color:#22863a">- ${cur} ${bill.disc.toFixed(2)}</span></div>`:''}
         ${bill.tax>0?`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee"><span>Tax (${bill.tp}%)</span><span>+ ${cur} ${bill.tax.toFixed(2)}</span></div>`:''}
@@ -850,13 +1031,12 @@ function buildReceiptHTML(bill,size){
 }
 
 function savePrintSize(){
-  S.settings.printSize=document.getElementById('s-printSize')?.value||'a4';
-  save();toast('Print size saved','s');
+  S.settings.printSize=document.getElementById('s-printSize')?.value||'a4';save();toast('Print size saved','s');
 }
 
-// ══════════════════════════════════════════════════
+// ══════════════════════════════════
 // BLUETOOTH THERMAL PRINTER
-// ══════════════════════════════════════════════════
+// ══════════════════════════════════
 const BT={device:null,server:null,char:null,lastBill:null};
 const BT_UUIDS=[
   {svc:'000018f0-0000-1000-8000-00805f9b34fb',chr:'00002af1-0000-1000-8000-00805f9b34fb'},
@@ -876,10 +1056,8 @@ const ESCPOS={
   twoCol:(left,right,width)=>{const gap=width-left.length-right.length;return ESCPOS.line(left+' '.repeat(Math.max(1,gap))+right);},
 };
 function mergeBytes(...arrays){
-  const total=arrays.reduce((s,a)=>s+a.length,0);
-  const out=new Uint8Array(total);let offset=0;
-  for(const a of arrays){out.set(a,offset);offset+=a.length;}
-  return out;
+  const total=arrays.reduce((s,a)=>s+a.length,0);const out=new Uint8Array(total);let offset=0;
+  for(const a of arrays){out.set(a,offset);offset+=a.length;}return out;
 }
 function buildEscPosReceipt(bill){
   const s=S.settings,cur=s.cur||'LKR';
@@ -887,22 +1065,19 @@ function buildEscPosReceipt(bill){
   const parts=[];const p=(...a)=>parts.push(...a);
   p(ESCPOS.init());p(ESCPOS.alignCenter());p(ESCPOS.bold(true),ESCPOS.doubleH(true));
   p(ESCPOS.line((s.name||'Hotel POS').substring(0,W)));p(ESCPOS.doubleH(false));
-  if(s.sub)p(ESCPOS.line(s.sub.substring(0,W)));
-  if(s.addr)p(ESCPOS.line(s.addr.substring(0,W)));
-  if(s.phone)p(ESCPOS.line(s.phone.substring(0,W)));
+  if(s.sub)p(ESCPOS.line(s.sub.substring(0,W)));if(s.addr)p(ESCPOS.line(s.addr.substring(0,W)));if(s.phone)p(ESCPOS.line(s.phone.substring(0,W)));
   p(ESCPOS.bold(false));p(ESCPOS.dashes(W));p(ESCPOS.alignLeft());
   const dt=new Date(bill.date);
   p(ESCPOS.twoCol('Bill: '+bill.billNo,dt.toLocaleDateString(),W));
   p(ESCPOS.line('Time: '+dt.toLocaleTimeString()));p(ESCPOS.line('Pay:  '+bill.pay.toUpperCase()));
+  if(bill.cashier)p(ESCPOS.line('Staff: '+bill.cashier));
   p(ESCPOS.dashes(W));
   const nameW=W-8-9;
   p(ESCPOS.bold(true));p(ESCPOS.line('Item'.padEnd(nameW)+' Qty'.padStart(4)+'  Amount'.padStart(9)));p(ESCPOS.bold(false));
   p(ESCPOS.dashes(W));
   bill.items.forEach(it=>{
-    const name=it.name.substring(0,nameW).padEnd(nameW);
-    const qty=String(it.qty).padStart(4);
-    const amt=(cur+' '+(it.price*it.qty).toFixed(2)).padStart(9);
-    p(ESCPOS.line(name+qty+amt));
+    const name=it.name.substring(0,nameW).padEnd(nameW);const qty=String(it.qty).padStart(4);
+    const amt=(cur+' '+(it.price*it.qty).toFixed(2)).padStart(9);p(ESCPOS.line(name+qty+amt));
   });
   p(ESCPOS.dashes(W));
   p(ESCPOS.twoCol('Subtotal:',cur+' '+bill.sub.toFixed(2),W));
@@ -911,8 +1086,7 @@ function buildEscPosReceipt(bill){
   p(ESCPOS.dashes(W));p(ESCPOS.bold(true),ESCPOS.doubleH(true));
   p(ESCPOS.twoCol('TOTAL:',cur+' '+bill.total.toFixed(2),W));
   p(ESCPOS.doubleH(false),ESCPOS.bold(false));p(ESCPOS.dashes(W));p(ESCPOS.alignCenter());
-  p(ESCPOS.line(s.footer||'Thank you for visiting!'));p(ESCPOS.line('Powered by Hotel POS'));
-  p(ESCPOS.feed(4));p(ESCPOS.cut());
+  p(ESCPOS.line(s.footer||'Thank you for visiting!'));p(ESCPOS.feed(4));p(ESCPOS.cut());
   return mergeBytes(...parts);
 }
 function buildTextReceipt(bill){
@@ -920,7 +1094,8 @@ function buildTextReceipt(bill){
   const W=parseInt(document.getElementById('btPaperWidth')?.value||'48');
   const L=[];const c=(str)=>str.padStart(Math.floor((W+str.length)/2)).padEnd(W);const d=()=>'-'.repeat(W);
   L.push(c(s.name||'Hotel POS'));if(s.sub)L.push(c(s.sub));if(s.addr)L.push(c(s.addr));if(s.phone)L.push(c(s.phone));
-  L.push(d());L.push('Bill: '+bill.billNo+'  '+new Date(bill.date).toLocaleDateString());L.push('Pay:  '+bill.pay.toUpperCase());L.push(d());
+  L.push(d());L.push('Bill: '+bill.billNo+'  '+new Date(bill.date).toLocaleDateString());L.push('Pay:  '+bill.pay.toUpperCase());
+  if(bill.cashier)L.push('Staff: '+bill.cashier);L.push(d());
   bill.items.forEach(it=>{const name=it.name.substring(0,W-14);L.push(name.padEnd(W-13)+String(it.qty).padStart(3)+'  '+(cur+' '+(it.price*it.qty).toFixed(2)).padStart(9));});
   L.push(d());const r2=(a,b)=>a.padEnd(W-b.length)+b;
   L.push(r2('Subtotal:',cur+' '+bill.sub.toFixed(2)));
@@ -937,7 +1112,7 @@ async function btWriteBytes(bytes){
   }
 }
 async function btConnect(){
-  if(!navigator.bluetooth){toast('Web Bluetooth not supported in this browser','e');return;}
+  if(!navigator.bluetooth){toast('Web Bluetooth not supported','e');return;}
   btSetStatus('scanning','Scanning for printers...');
   document.getElementById('btConnBtn').disabled=true;
   try{
@@ -961,7 +1136,7 @@ async function btConnect(){
     document.getElementById('btTestBtn').disabled=false;document.getElementById('btDiscBtn').disabled=false;
     document.getElementById('btConnBtn').textContent='🔄 Reconnect';document.getElementById('btConnBtn').disabled=false;
     document.getElementById('printFab').classList.add('show');
-    toast('🖨 Printer connected: '+(device.name||'Unknown'),'s');
+    toast('🖨 Printer connected','s');
   }catch(e){
     btSetStatus('error','Connection failed','Tap Scan & Connect to try again');
     document.getElementById('btConnBtn').disabled=false;
@@ -990,15 +1165,14 @@ function btSetStatus(state,name,sub){
 async function btPrint(bill){
   if(!BT.char){toast('Printer not connected','e');return;}
   try{
-    await btWriteBytes(buildEscPosReceipt(bill));
-    BT.lastBill=bill;
+    await btWriteBytes(buildEscPosReceipt(bill));BT.lastBill=bill;
     const prev=document.getElementById('btReceiptPreview');const area=document.getElementById('btTestArea');
     if(prev){prev.textContent=buildTextReceipt(bill);area.style.display='block';}
     toast('🖨 Receipt printed','s');
   }catch(e){toast('Print failed: '+e.message,'e');}
 }
 async function btTest(){
-  const testBill={billNo:'TEST-001',date:new Date().toISOString(),items:[{name:'Test Item A',emoji:'🍽',price:500,qty:2},{name:'Test Item B',emoji:'☕',price:280,qty:1}],sub:1280,dp:0,disc:0,tp:10,tax:128,total:1408,pay:'cash'};
+  const testBill={billNo:'TEST-001',date:new Date().toISOString(),items:[{name:'Test Item A',emoji:'🍽',price:500,qty:2},{name:'Test Item B',emoji:'☕',price:280,qty:1}],sub:1280,dp:0,disc:0,tp:10,tax:128,total:1408,pay:'cash',cashier:S.activeUser?.name||'Staff'};
   await btPrint(testBill);
 }
 async function btPrintLastBill(){
@@ -1040,14 +1214,46 @@ function fillCatDL(){
   const c=[...new Set(S.products.map(p=>p.cat).filter(Boolean))];
   document.getElementById('catDL').innerHTML=c.map(c=>`<option value="${c}">`).join('');
 }
+
+// ══════════ DUPLICATE PRODUCT SEARCH ══════════
+function searchDuplicates(q){
+  const resultsEl=document.getElementById('dupResults');
+  if(!q||q.length<2){resultsEl.style.display='none';resultsEl.innerHTML='';return;}
+  const matches=S.products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())||(p.cat||'').toLowerCase().includes(q.toLowerCase()));
+  if(!matches.length){resultsEl.style.display='none';resultsEl.innerHTML='';return;}
+  resultsEl.style.display='flex';
+  resultsEl.innerHTML=matches.map(p=>`
+    <div class="dup-item" onclick="loadExistingProd('${p.id}')">
+      <span style="font-size:20px">${p.emoji||'📦'}</span>
+      <div class="dup-info">
+        <div class="dup-name">${p.name}</div>
+        <div class="dup-meta">${p.cat||'—'} · ${C()} ${p.price.toFixed(2)} · Stock: ${p.stock}</div>
+      </div>
+      <span style="font-size:11px;color:var(--accent);font-weight:600">Edit →</span>
+    </div>`).join('');
+}
+
+function loadExistingProd(id){
+  // Load the existing product into the form for editing
+  closeM('prodModal');
+  setTimeout(()=>openEditProd(id),200);
+}
+
 function openAddProd(){
-  S.editing=null;document.getElementById('prodModalTitle').textContent='Add Product';
+  S.editing=null;
+  document.getElementById('prodModalTitle').textContent='Add Product';
   ['id','emoji','name','cat','price','stock'].forEach(f=>{const el=document.getElementById('p-'+f);if(el)el.value='';});
+  const ds=document.getElementById('dupSearchSection');if(ds)ds.style.display='block';
+  const di=document.getElementById('dupSearchInput');if(di)di.value='';
+  const dr=document.getElementById('dupResults');if(dr){dr.style.display='none';dr.innerHTML='';}
   fillCatDL();openM('prodModal');
+  setTimeout(()=>{const di2=document.getElementById('dupSearchInput');if(di2)di2.focus();},300);
 }
 function openEditProd(id){
   const p=S.products.find(x=>x.id===id);if(!p)return;
-  S.editing=id;document.getElementById('prodModalTitle').textContent='Edit Product';
+  S.editing=id;
+  document.getElementById('prodModalTitle').textContent='Edit Product';
+  const ds=document.getElementById('dupSearchSection');if(ds)ds.style.display='none';
   document.getElementById('p-id').value=p.id;document.getElementById('p-emoji').value=p.emoji||'';
   document.getElementById('p-name').value=p.name;document.getElementById('p-cat').value=p.cat||'';
   document.getElementById('p-price').value=p.price;document.getElementById('p-stock').value=p.stock;
@@ -1075,7 +1281,7 @@ function delProd(id){
 // ══════════ BILLS ══════════
 function renderBills(){
   const q=(document.getElementById('billSearch').value||'').toLowerCase();
-  const f=S.bills.filter(b=>!q||b.billNo.toLowerCase().includes(q)||b.pay.includes(q));
+  const f=S.bills.filter(b=>!q||b.billNo.toLowerCase().includes(q)||b.pay.includes(q)||(b.cashier||'').toLowerCase().includes(q));
   const todayStr=new Date().toDateString();
   const td=S.bills.filter(b=>new Date(b.date).toDateString()===todayStr);
   const cur=C();
@@ -1089,7 +1295,7 @@ function renderBills(){
   el.innerHTML=f.map(b=>`<div class="list-card" onclick="viewBill('${b.billNo}')">
     <div class="lc-head"><span class="lc-id">${b.billNo}</span><span class="lc-date">${new Date(b.date).toLocaleDateString()}</span></div>
     <div class="lc-amt">${cur} ${b.total.toFixed(2)}</div>
-    <div class="lc-sub">${b.items.length} item(s) · ${b.pay.toUpperCase()}</div>
+    <div class="lc-sub">${b.items.length} item(s) · ${b.pay.toUpperCase()}${b.cashier?' · '+b.cashier:''}</div>
     <div class="lc-actions">
       <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();printBill(S.bills.find(x=>x.billNo==='${b.billNo}'))">🖨 Print</button>
       <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();startRet('${b.billNo}')">↩ Return</button>
@@ -1102,9 +1308,10 @@ function viewBill(billNo){
   const cur=C();
   document.getElementById('billModalTitle').textContent=billNo;
   document.getElementById('billModalBody').innerHTML=`
-    <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:12px;color:var(--text2)">
+    <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:12px;color:var(--text2);flex-wrap:wrap;gap:8px">
       <span>${new Date(b.date).toLocaleString()}</span>
       <span class="badge b-green">${b.pay.toUpperCase()}</span>
+      ${b.cashier?`<span style="font-size:11px;color:var(--text2)">👤 ${b.cashier}</span>`:''}
     </div>
     <div class="card-list" style="margin-bottom:14px">
       ${b.items.map(i=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg3);border-radius:var(--r8)">
@@ -1125,11 +1332,9 @@ function viewBill(billNo){
     </div>`;
   openM('billModal');
 }
-
 function deleteBill(billNo){
   if(!confirm('Delete bill '+billNo+'? This cannot be undone.'))return;
-  S.bills=S.bills.filter(b=>b.billNo!==billNo);
-  save();renderBills();toast('Bill '+billNo+' deleted','i');
+  S.bills=S.bills.filter(b=>b.billNo!==billNo);save();renderBills();toast('Bill '+billNo+' deleted','i');
 }
 
 // ══════════ RETURNS ══════════
@@ -1206,8 +1411,163 @@ function saveShop(){
   save();applySettings();if(s.tax)document.getElementById('taxIn').value=s.tax;toast('Shop info saved','s');
 }
 
-// ══════════ GOOGLE SHEETS HELPERS ══════════
+// ══════════ USER MANAGEMENT ══════════
+function avatarColor(user){return user.color||ROLE_COLORS[user.role]||'var(--text2)';}
 
+function updateUserChip(){
+  const u=S.activeUser;
+  const chip=document.getElementById('userChip');
+  const avatar=document.getElementById('topUserAvatar');
+  const name=document.getElementById('topUserName');
+  if(!u){avatar.textContent='👤';avatar.style.background='var(--bg3)';avatar.style.color='var(--text2)';name.textContent='Guest';return;}
+  avatar.textContent=u.avatar||'👤';
+  avatar.style.background=avatarColor(u)+'22';
+  avatar.style.color=avatarColor(u);
+  name.textContent=u.name;
+}
+
+function renderUserListSettings(){
+  const el=document.getElementById('userListSettings');if(!el)return;
+  el.innerHTML=S.users.map(u=>`
+    <div class="user-row${S.activeUser&&S.activeUser.id===u.id?' active-user':''}">
+      <div class="ur-avatar" style="background:${avatarColor(u)}22;color:${avatarColor(u)}">${u.avatar||'👤'}</div>
+      <div class="ur-info">
+        <div class="ur-name">${u.name}${S.activeUser&&S.activeUser.id===u.id?' <span style="font-size:10px;color:var(--green)">● Active</span>':''}</div>
+        <div class="ur-role"><span class="role-tag role-${u.role}">${ROLE_LABELS[u.role]||u.role}</span></div>
+      </div>
+      <div class="ur-actions">
+        <button class="icon-btn" onclick="openEditUser('${u.id}')">✏️</button>
+        <button class="icon-btn" onclick="switchToUser('${u.id}')" style="color:var(--green);border-color:var(--border)">→</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderUserSwitchList(){
+  const el=document.getElementById('userSwitchList');if(!el)return;
+  el.innerHTML=S.users.map(u=>`
+    <div class="user-row${S.activeUser&&S.activeUser.id===u.id?' active-user':''}" style="cursor:pointer" onclick="switchToUser('${u.id}')">
+      <div class="ur-avatar" style="background:${avatarColor(u)}22;color:${avatarColor(u)};width:44px;height:44px;font-size:20px">${u.avatar||'👤'}</div>
+      <div class="ur-info">
+        <div class="ur-name" style="font-size:15px">${u.name}</div>
+        <div class="ur-role"><span class="role-tag role-${u.role}">${ROLE_LABELS[u.role]||u.role}</span>${u.pin?' 🔒':' 🔓 No PIN'}</div>
+      </div>
+      ${S.activeUser&&S.activeUser.id===u.id?'<span style="color:var(--green);font-size:18px">✓</span>':''}
+    </div>`).join('');
+}
+
+function openM_userSwitch(){
+  renderUserSwitchList();openM('userSwitchModal');
+}
+// Override openM for userSwitchModal to always refresh list
+const _origOpenM=window.openM;
+function openM(id){
+  if(id==='userSwitchModal')renderUserSwitchList();
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function switchToUser(uid){
+  const u=S.users.find(x=>x.id===uid);if(!u)return;
+  if(u.pin){
+    S.pinTarget=u;S.pinBuffer='';
+    document.getElementById('pinUserName').textContent=u.avatar+' '+u.name;
+    document.getElementById('pinUserRole').textContent=ROLE_LABELS[u.role]||u.role;
+    updatePinDots();
+    document.getElementById('pinError').textContent='';
+    closeM('userSwitchModal');openM('pinModal');
+  }else{
+    S.activeUser=u;save();updateUserChip();
+    renderUserListSettings();closeM('userSwitchModal');
+    toast('Switched to '+u.name,'s');
+  }
+}
+
+function pinKey(k){
+  if(k==='')return;
+  if(k==='⌫'){S.pinBuffer=S.pinBuffer.slice(0,-1);}
+  else if(S.pinBuffer.length<4){S.pinBuffer+=k;}
+  updatePinDots();
+  if(S.pinBuffer.length===4)setTimeout(checkPin,200);
+}
+
+function updatePinDots(){
+  for(let i=0;i<4;i++){
+    const dot=document.getElementById('pd'+i);
+    if(dot){dot.style.background=i<S.pinBuffer.length?'var(--accent)':'transparent';dot.style.borderColor=i<S.pinBuffer.length?'var(--accent)':'var(--border2)';}
+  }
+}
+
+function checkPin(){
+  const u=S.pinTarget;if(!u)return;
+  if(S.pinBuffer===u.pin){
+    S.activeUser=u;save();updateUserChip();renderUserListSettings();
+    closeM('pinModal');toast('Welcome, '+u.name+'!','s');S.pinTarget=null;S.pinBuffer='';
+  }else{
+    document.getElementById('pinError').textContent='❌ Wrong PIN — try again';
+    S.pinBuffer='';updatePinDots();
+    setTimeout(()=>{const e=document.getElementById('pinError');if(e)e.textContent='';},2000);
+  }
+}
+
+function openAddUser(){
+  S.editingUser=null;
+  document.getElementById('userModalTitle').textContent='Add Staff User';
+  ['u-name','u-pin'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('u-avatar').value='👤';
+  document.getElementById('u-role').value='cashier';
+  document.getElementById('delUserBtn').style.display='none';
+  openM('userModal');
+}
+
+function openEditUser(id){
+  const u=S.users.find(x=>x.id===id);if(!u)return;
+  S.editingUser=id;
+  document.getElementById('userModalTitle').textContent='Edit User';
+  document.getElementById('u-name').value=u.name;
+  document.getElementById('u-role').value=u.role;
+  document.getElementById('u-avatar').value=u.avatar||'👤';
+  document.getElementById('u-pin').value=u.pin||'';
+  const delBtn=document.getElementById('delUserBtn');
+  if(delBtn)delBtn.style.display=S.users.length>1?'flex':'none';
+  openM('userModal');
+}
+
+function saveUser(){
+  const name=document.getElementById('u-name').value.trim();
+  if(!name){toast('Name required','e');return;}
+  const pin=document.getElementById('u-pin').value.trim();
+  if(pin&&(pin.length!==4||!/^\d+$/.test(pin))){toast('PIN must be exactly 4 digits','e');return;}
+  const roleColors={admin:'#f0a500',manager:'#bc8cff',cashier:'#58a6ff'};
+  const user={
+    id:S.editingUser||'U'+Date.now(),
+    name,
+    role:document.getElementById('u-role').value,
+    avatar:document.getElementById('u-avatar').value.trim()||'👤',
+    pin,
+    color:roleColors[document.getElementById('u-role').value]||'#8b949e'
+  };
+  if(S.editingUser){
+    const i=S.users.findIndex(x=>x.id===S.editingUser);
+    if(i>-1)S.users[i]=user;
+    if(S.activeUser&&S.activeUser.id===S.editingUser){S.activeUser=user;}
+  }else{
+    S.users.push(user);
+  }
+  save();renderUserListSettings();updateUserChip();closeM('userModal');
+  toast(S.editingUser?'User updated':'User added','s');
+}
+
+function deleteCurrentEditUser(){
+  if(!S.editingUser)return;
+  if(S.users.length<=1){toast('Cannot delete last user','e');return;}
+  if(!confirm('Delete this user?'))return;
+  if(S.activeUser&&S.activeUser.id===S.editingUser){
+    S.activeUser=S.users.find(u=>u.id!==S.editingUser)||null;
+  }
+  S.users=S.users.filter(u=>u.id!==S.editingUser);
+  save();renderUserListSettings();updateUserChip();closeM('userModal');toast('User deleted','i');
+}
+
+// ══════════ GOOGLE SHEETS HELPERS ══════════
 function extractSheetId(input){
   if(!input)return'';input=input.trim();
   const m=input.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
@@ -1232,9 +1592,8 @@ function autoExtractSheetId(){
 }
 
 function validateSheetInputs(){
-  const cid=document.getElementById('s-clientId').value.trim();
-  const sid=extractSheetId(document.getElementById('s-sheetId').value.trim());
-  document.getElementById('authGoogleBtn').disabled=!S.settings.clientId||!S.settings.sheetId;
+  const ab=document.getElementById('authGoogleBtn');
+  if(ab)ab.disabled=!S.settings.clientId||!S.settings.sheetId;
 }
 
 function setStep(n){
@@ -1255,39 +1614,39 @@ function saveSheets(){
   s.pSheet=document.getElementById('s-pSheet').value.trim()||'Products';
   s.bSheet=document.getElementById('s-bSheet').value.trim()||'Bills';
   s.rSheet=document.getElementById('s-rSheet').value.trim()||'Returns';
-  if(!s.clientId){setSyncBox('err','❌ Client ID is empty — paste your OAuth Client ID');return;}
+  if(!s.clientId){setSyncBox('err','❌ Client ID is empty');return;}
   if(!s.sheetId||s.sheetId.length<20){setSyncBox('err','❌ Spreadsheet ID looks wrong — paste the full Google Sheets URL');return;}
   save();setStep(2);
-  document.getElementById('authGoogleBtn').disabled=false;
-  const prev=document.getElementById('sheetIdPreview');
-  prev.style.display='block';prev.style.background='var(--green-dim)';prev.style.color='var(--green)';prev.textContent='✅ Saved ID: '+s.sheetId;
+  const ab=document.getElementById('authGoogleBtn');if(ab)ab.disabled=false;
   setSyncBox('info','✅ Config saved! Now tap Step 2 — Sign In with Google.');
   toast('Config saved','s');
 }
 
-// ══════════════════════════════════════════════════════
+// ══════════════════════════════
 // APPS SCRIPT MODE
-// ══════════════════════════════════════════════════════
+// ══════════════════════════════
 function switchMode(mode){
   S.settings.syncMode=mode;save();
-  document.getElementById('gasModePanel').style.display=mode==='gas'?'block':'none';
-  document.getElementById('oauthModePanel').style.display=mode==='oauth'?'block':'none';
-  document.getElementById('modeTabGas').style.background=mode==='gas'?'var(--accent-dim)':'var(--bg3)';
-  document.getElementById('modeTabGas').style.color=mode==='gas'?'var(--accent)':'var(--text3)';
-  document.getElementById('modeTabOauth').style.background=mode==='oauth'?'var(--accent-dim)':'var(--bg3)';
-  document.getElementById('modeTabOauth').style.color=mode==='oauth'?'var(--accent)':'var(--text3)';
+  const gasPanel=document.getElementById('gasModePanel');
+  const oauthPanel=document.getElementById('oauthModePanel');
+  const gasTab=document.getElementById('modeTabGas');
+  const oauthTab=document.getElementById('modeTabOauth');
+  if(gasPanel)gasPanel.style.display=mode==='gas'?'block':'none';
+  if(oauthPanel)oauthPanel.style.display=mode==='oauth'?'block':'none';
+  if(gasTab){gasTab.style.background=mode==='gas'?'var(--accent-dim)':'var(--bg3)';gasTab.style.color=mode==='gas'?'var(--accent)':'var(--text3)';}
+  if(oauthTab){oauthTab.style.background=mode==='oauth'?'var(--accent-dim)':'var(--bg3)';oauthTab.style.color=mode==='oauth'?'var(--accent)':'var(--text3)';}
 }
 
 function gasValidate(){
-  const inputEl=document.getElementById('gas-url');
-  const url=(inputEl?inputEl.value.trim():'')||S.settings.gasUrl||'';
-  const ok=url.startsWith('https://script.google.com/macros/s/');
+  const urlEl=document.getElementById('gas-url');
+  const url=urlEl?urlEl.value.trim():S.settings.gasUrl||'';
+  const ok=!!(url&&url.startsWith('https://script.google.com/macros/s/'));
   ['gasTestBtn','gasSetupBtn','gasPushBtn','gasPullBtn'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=!ok;});
 }
 
 function gasSave(){
-  const inputEl=document.getElementById('gas-url');
-  const url=inputEl?inputEl.value.trim():S.settings.gasUrl;
+  const urlEl=document.getElementById('gas-url');
+  const url=urlEl?urlEl.value.trim():S.settings.gasUrl;
   if(!url){setGasBox('err','❌ Paste your Web App URL first');return;}
   if(!url.startsWith('https://script.google.com/macros/s/')){setGasBox('err','❌ URL must start with https://script.google.com/macros/s/...');return;}
   S.settings.gasUrl=url;
@@ -1302,47 +1661,48 @@ function gasSave(){
   gasAutoConnect();
 }
 
-function setGasBox(type,msg){
-  const el=document.getElementById('gasStatus');if(!el)return;
-  el.className='sync-box '+type;el.textContent=msg;
-}
+function setGasBox(type,msg){const el=document.getElementById('gasStatus');if(!el)return;el.className='sync-box '+type;el.textContent=msg;}
 
 async function gasCall(action,payload={}){
   const url=S.settings.gasUrl||GAS_DEFAULT_URL;
   if(!url)throw new Error('No Web App URL configured');
   const body=JSON.stringify({action,...payload});
-  // Use no-cors-safe approach: POST with text/plain (GAS accepts this)
-  const r=await fetch(url,{
-    method:'POST',
-    body,
-    headers:{'Content-Type':'text/plain'},
-    redirect:'follow'
-  });
+  const r=await fetch(url,{method:'POST',body,headers:{'Content-Type':'text/plain'},redirect:'follow'});
   if(!r.ok)throw new Error('HTTP '+r.status+' — check Web App is deployed as "Anyone" access');
   const text=await r.text();
   try{return JSON.parse(text);}catch(e){throw new Error('Invalid JSON: '+text.substring(0,120));}
 }
 
-// Auto-connect silently on load/save — shows status dot, no popup
 async function gasAutoConnect(){
   const dot=document.getElementById('syncDot');
   if(dot)dot.className='sync-dot syncing';
   S.gasConnected=false;
+  // Only attempt if we have a URL
+  const url=S.settings.gasUrl||GAS_DEFAULT_URL;
+  if(!url||!url.startsWith('https://script.google.com/')){
+    if(dot)dot.className='sync-dot off';
+    setGasBox('info','ℹ Paste your Web App URL above → Save Config.');
+    return;
+  }
   try{
     const d=await gasCall('ping');
-    if(d.ok){
+    if(d&&d.ok){
       S.gasConnected=true;
       if(dot)dot.className='sync-dot';
-      setGasBox('ok','✅ Connected to "'+d.title+'" · Sheets: '+d.sheets.join(', '));
+      setGasBox('ok','✅ Connected to "'+d.title+'" · Sheets: '+(d.sheets||[]).join(', '));
       gasValidate();
-      toast('☁ Sheet connected','s');
-    } else {
+    }else{
       if(dot)dot.className='sync-dot off';
       setGasBox('err','❌ '+(d.error||'Connection failed — check Web App deployment'));
     }
   }catch(e){
     if(dot)dot.className='sync-dot off';
-    setGasBox('err','⚠ Cannot reach Sheet: '+e.message);
+    // Only show error if we have a custom URL (not default placeholder)
+    if(S.settings.gasUrl&&S.settings.gasUrl!==GAS_DEFAULT_URL){
+      setGasBox('err','⚠ Cannot reach Sheet: '+e.message);
+    }else{
+      setGasBox('info','ℹ Paste your Web App URL above → Save Config.');
+    }
   }
 }
 
@@ -1350,7 +1710,7 @@ async function gasTest(){
   setGasBox('info','🔗 Testing connection...');
   try{
     const d=await gasCall('ping');
-    if(d.ok){setGasBox('ok','✅ Connected! Sheet: "'+d.title+'" · Sheets: '+d.sheets.join(', '));toast('Connection OK ✓','s');}
+    if(d&&d.ok){setGasBox('ok','✅ Connected! Sheet: "'+d.title+'" · Sheets: '+(d.sheets||[]).join(', '));toast('Connection OK ✓','s');}
     else setGasBox('err','❌ '+(d.error||'Unknown error'));
   }catch(e){setGasBox('err','❌ '+e.message);}
 }
@@ -1358,12 +1718,8 @@ async function gasTest(){
 async function gasSetupHeaders(){
   setGasBox('info','🔄 Setting up headers...');
   try{
-    const d=await gasCall('setupHeaders',{
-      pSheet:S.settings.gasPSheet||'Products',
-      bSheet:S.settings.gasBSheet||'Bills',
-      rSheet:S.settings.gasRSheet||'Returns'
-    });
-    if(d.ok){setGasBox('ok','✅ Headers created in all 3 sheets!');toast('Headers ready ✓','s');}
+    const d=await gasCall('setupHeaders',{pSheet:S.settings.gasPSheet||'Products',bSheet:S.settings.gasBSheet||'Bills',rSheet:S.settings.gasRSheet||'Returns'});
+    if(d&&d.ok){setGasBox('ok','✅ Headers created in all 3 sheets!');toast('Headers ready ✓','s');}
     else setGasBox('err','❌ '+(d.error||'Failed'));
   }catch(e){setGasBox('err','❌ '+e.message);}
 }
@@ -1371,30 +1727,27 @@ async function gasSetupHeaders(){
 async function gasPushAll(){
   setGasBox('info','⬆ Pushing all data...');
   try{
-    const d=await gasCall('pushAll',{
-      products:S.products,bills:S.bills,returns:S.returns,
-      pSheet:S.settings.gasPSheet||'Products',
-      bSheet:S.settings.gasBSheet||'Bills',
-      rSheet:S.settings.gasRSheet||'Returns'
-    });
-    if(d.ok){setGasBox('ok',`✅ Pushed: ${S.products.length} products, ${S.bills.length} bills, ${S.returns.length} returns`);toast('Data pushed ✓','s');}
+    const d=await gasCall('pushAll',{products:S.products,bills:S.bills,returns:S.returns,pSheet:S.settings.gasPSheet||'Products',bSheet:S.settings.gasBSheet||'Bills',rSheet:S.settings.gasRSheet||'Returns'});
+    if(d&&d.ok){setGasBox('ok',`✅ Pushed: ${S.products.length} products, ${S.bills.length} bills, ${S.returns.length} returns`);toast('Data pushed ✓','s');}
     else setGasBox('err','❌ '+(d.error||'Failed'));
   }catch(e){setGasBox('err','❌ '+e.message);}
 }
 
 async function gasPull(){
+  const sp=document.getElementById('pullSpinner');if(sp)sp.style.display='inline-block';
   setGasBox('info','⬇ Pulling products...');
   try{
     const d=await gasCall('getProducts',{pSheet:S.settings.gasPSheet||'Products'});
-    if(d.ok&&d.products&&d.products.length){
+    if(d&&d.ok&&d.products&&d.products.length){
       S.products=d.products;save();renderProdGrid();renderProdList();renderCats();fillCatDL();
       setGasBox('ok',`✅ Pulled ${S.products.length} products`);toast(`Synced ${S.products.length} products ✓`,'s');
     }else setGasBox('err','❌ '+(d.error||'No products found — run Setup Headers first'));
   }catch(e){setGasBox('err','❌ '+e.message);}
+  if(sp)sp.style.display='none';
 }
 
 async function gasAppendBill(bill){
-  if(!S.settings.gasUrl&&!GAS_DEFAULT_URL)return;
+  if(!S.settings.gasUrl)return;
   if(!S.gasConnected)await gasAutoConnect();
   try{
     const d=await gasCall('appendBill',{bill,bSheet:S.settings.gasBSheet||'Bills'});
@@ -1403,13 +1756,13 @@ async function gasAppendBill(bill){
 }
 
 async function gasAppendReturn(ret){
-  if(!S.settings.gasUrl&&!GAS_DEFAULT_URL)return;
+  if(!S.settings.gasUrl)return;
   if(!S.gasConnected)await gasAutoConnect();
   try{await gasCall('appendReturn',{ret,rSheet:S.settings.gasRSheet||'Returns'});}catch(e){console.warn('gasAppendReturn:',e.message);}
 }
 
 async function gasAppendProduct(prod){
-  if(!S.settings.gasUrl&&!GAS_DEFAULT_URL)return;
+  if(!S.settings.gasUrl)return;
   if(!S.gasConnected)await gasAutoConnect();
   try{await gasCall('appendProduct',{prod,pSheet:S.settings.gasPSheet||'Products'});}catch(e){console.warn('gasAppendProduct:',e.message);}
 }
@@ -1418,40 +1771,32 @@ async function gasAppendProduct(prod){
 function authGoogle(){
   const cid=S.settings.clientId||document.getElementById('s-clientId').value.trim();
   if(!cid){setSyncBox('err','❌ Save Config first (Step 1)');return;}
-  if(!S.settings.sheetId){setSyncBox('err','❌ Spreadsheet ID missing — complete Step 1 first');return;}
+  if(!S.settings.sheetId){setSyncBox('err','❌ Spreadsheet ID missing');return;}
   setSyncBox('info','🔐 Opening Google sign-in popup...');
   try{
     const cl=google.accounts.oauth2.initTokenClient({
-      client_id:cid,
-      scope:'https://www.googleapis.com/auth/spreadsheets',
+      client_id:cid,scope:'https://www.googleapis.com/auth/spreadsheets',
       callback:(resp)=>{
         if(resp.error){
           let msg='❌ Auth error: '+resp.error;
-          if(resp.error==='redirect_uri_mismatch'||resp.error==='invalid_client')
-            msg='❌ redirect_uri_mismatch — Add this exact origin to Google Cloud Console:\n'+location.origin;
-          if(resp.error==='access_denied')
-            msg='❌ Access denied. Add your email as a Test User in OAuth consent screen.';
+          if(resp.error==='redirect_uri_mismatch'||resp.error==='invalid_client')msg='❌ redirect_uri_mismatch — Add this origin: '+location.origin;
+          if(resp.error==='access_denied')msg='❌ Access denied. Add your email as a Test User.';
           setSyncBox('err',msg);toast('Auth failed','e');return;
         }
         S.gToken=resp.access_token;
-        document.getElementById('syncDot').className='sync-dot';
-        setStep(3);
+        document.getElementById('syncDot').className='sync-dot';setStep(3);
         ['testConnBtn','setupHdrBtn','pushAllBtn','pullProdBtn'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=false;});
-        setSyncBox('ok','✅ Signed in! Tap Step 3 — Test Connection to verify.');
-        toast('Signed in to Google ✓','s');
+        setSyncBox('ok','✅ Signed in! Tap Step 3 — Test Connection to verify.');toast('Signed in to Google ✓','s');
       }
     });
     cl.requestAccessToken();
   }catch(e){
     let hint='';
-    if(e.message&&(e.message.includes('redirect_uri')||e.message.includes('origin')))
-      hint=' — Add '+location.origin+' to Authorised JavaScript Origins in Google Cloud Console';
-    setSyncBox('err','❌ '+e.message+hint);
-    toast('Error: '+e.message,'e');
+    if(e.message&&(e.message.includes('redirect_uri')||e.message.includes('origin')))hint=' — Add '+location.origin+' to Authorised JavaScript Origins';
+    setSyncBox('err','❌ '+e.message+hint);toast('Error: '+e.message,'e');
   }
 }
 
-// ══════════ SHEETS API (OAuth mode) ══════════
 function sheetsURL(sheet,append){
   const sid=S.settings.sheetId;
   const base=`https://sheets.googleapis.com/v4/spreadsheets/${sid}/values/${encodeURIComponent(sheet)}`;
@@ -1470,7 +1815,7 @@ async function appendRows(sheet,rows){
 
 async function testConnection(){
   if(!S.gToken){setSyncBox('err','❌ Not signed in — tap Sign In with Google first');return;}
-  if(!S.settings.sheetId){setSyncBox('err','❌ No Spreadsheet ID — complete Step 1 first');return;}
+  if(!S.settings.sheetId){setSyncBox('err','❌ No Spreadsheet ID');return;}
   setSyncBox('info','🔗 Testing connection...');
   try{
     const url=`https://sheets.googleapis.com/v4/spreadsheets/${S.settings.sheetId}?fields=properties.title,sheets.properties.title`;
@@ -1478,14 +1823,13 @@ async function testConnection(){
     const d=await r.json();
     if(d.error){
       let hint='';
-      if(d.error.code===404)hint=' — Check your Spreadsheet ID is correct';
+      if(d.error.code===404)hint=' — Check your Spreadsheet ID';
       if(d.error.code===403)hint=' — Share the Google Sheet with your account (Editor)';
       if(d.error.code===401)hint=' — Token expired, sign in again';
       setSyncBox('err',`❌ ${d.error.code}: ${d.error.message}${hint}`);return;
     }
     const sheetNames=(d.sheets||[]).map(s=>s.properties.title).join(', ');
-    setSyncBox('ok',`✅ Connected! "${d.properties?.title}" · Sheets: ${sheetNames||'(empty)'}`);
-    toast('Connection OK ✓','s');
+    setSyncBox('ok',`✅ Connected! "${d.properties?.title}" · Sheets: ${sheetNames||'(empty)'}`);toast('Connection OK ✓','s');
   }catch(e){setSyncBox('err','❌ Network error: '+e.message);}
 }
 
@@ -1495,10 +1839,9 @@ async function setupHeaders(){
   setSyncBox('info','🔄 Setting up headers...');
   try{
     await appendRows(S.settings.pSheet||'Products',[['id','emoji','name','category','price','stock']]);
-    await appendRows(S.settings.bSheet||'Bills',[['billNo','date','items','subtotal','discountPct','discount','taxPct','tax','total','payment']]);
+    await appendRows(S.settings.bSheet||'Bills',[['billNo','date','items','subtotal','discountPct','discount','taxPct','tax','total','payment','cashier']]);
     await appendRows(S.settings.rSheet||'Returns',[['returnNo','billNo','date','items','refundAmount']]);
-    setSyncBox('ok','✅ Headers created in all 3 sheets! Ready to use.');
-    toast('Sheet headers created ✓','s');
+    setSyncBox('ok','✅ Headers created in all 3 sheets!');toast('Sheet headers created ✓','s');
   }catch(e){setSyncBox('err','❌ '+e.message);}
 }
 
@@ -1507,7 +1850,7 @@ async function pushAll(){
   setSyncBox('info','🔄 Pushing all data...');let ok=true;
   try{
     if(S.products.length)ok=ok&&await appendRows(S.settings.pSheet||'Products',S.products.map(p=>[p.id,p.emoji,p.name,p.cat,p.price,p.stock]));
-    if(S.bills.length)ok=ok&&await appendRows(S.settings.bSheet||'Bills',S.bills.map(b=>[b.billNo,b.date,JSON.stringify(b.items),b.sub,b.dp,b.disc,b.tp,b.tax,b.total,b.pay]));
+    if(S.bills.length)ok=ok&&await appendRows(S.settings.bSheet||'Bills',S.bills.map(b=>[b.billNo,b.date,JSON.stringify(b.items),b.sub,b.dp,b.disc,b.tp,b.tax,b.total,b.pay,b.cashier||'']));
     if(S.returns.length)ok=ok&&await appendRows(S.settings.rSheet||'Returns',S.returns.map(r=>[r.retNo,r.billNo,r.date,JSON.stringify(r.items),r.amt]));
     if(ok){setSyncBox('ok',`✅ Pushed: ${S.products.length} products, ${S.bills.length} bills, ${S.returns.length} returns`);toast('Data pushed ✓','s');}
     else setSyncBox('err','⚠ Some rows failed — check sheet names and try again');
@@ -1522,17 +1865,12 @@ async function pullProducts(){
   try{
     const r=await fetch(sheetsURL(S.settings.pSheet||'Products'),{headers:authHeader()});
     const d=await r.json();
-    if(d.error){
-      let hint='';
-      if(d.error.code===404)hint=' (sheet "'+(S.settings.pSheet||'Products')+'" not found — run Setup Headers first)';
-      throw new Error(d.error.message+hint);
-    }
+    if(d.error)throw new Error(d.error.message);
     const rows=(d.values||[]).slice(1);
     if(rows.length){
       S.products=rows.map(r=>({id:r[0]||'',emoji:r[1]||'📦',name:r[2]||'',cat:r[3]||'',price:parseFloat(r[4])||0,stock:parseInt(r[5])||0})).filter(p=>p.id&&p.name);
       save();renderProdGrid();renderProdList();renderCats();fillCatDL();
-      setSyncBox('ok',`✅ Pulled ${S.products.length} products from Sheets`);
-      toast(`Synced ${S.products.length} products ✓`,'s');
+      setSyncBox('ok',`✅ Pulled ${S.products.length} products`);toast(`Synced ${S.products.length} products ✓`,'s');
     }else{toast('No product rows found — run Setup Headers first','i');}
   }catch(e){setSyncBox('err','❌ '+e.message);toast('Pull failed','e');}
   spinners.forEach(sp=>sp.style.display='none');
@@ -1540,7 +1878,7 @@ async function pullProducts(){
 
 async function pushBill(bill){
   if(S.settings.syncMode==='gas'){gasAppendBill(bill);return;}
-  await appendRows(S.settings.bSheet||'Bills',[[bill.billNo,bill.date,JSON.stringify(bill.items),bill.sub,bill.dp,bill.disc,bill.tp,bill.tax,bill.total,bill.pay]]);
+  await appendRows(S.settings.bSheet||'Bills',[[bill.billNo,bill.date,JSON.stringify(bill.items),bill.sub,bill.dp,bill.disc,bill.tp,bill.tax,bill.total,bill.pay,bill.cashier||'']]);
 }
 async function pushProduct(prod){
   if(S.settings.syncMode==='gas'){gasAppendProduct(prod);return;}
@@ -1551,12 +1889,9 @@ async function pushReturn(ret){
   await appendRows(S.settings.rSheet||'Returns',[[ret.retNo,ret.billNo,ret.date,JSON.stringify(ret.items),ret.amt]]);
 }
 
+function setSyncBox(type,msg){const el=document.getElementById('syncStatus');if(!el)return;el.className='sync-box '+type;el.textContent=msg;}
 
-function setSyncBox(type,msg){
-  const el=document.getElementById('syncStatus');if(!el)return;
-  el.className='sync-box '+type;el.textContent=msg;el.title=msg;
-}
-
+// ══════════ LOGO ══════════
 function uploadLogo(e){
   const f=e.target.files[0];if(!f)return;
   if(f.size>2*1024*1024){toast('Max 2MB','e');return;}
@@ -1564,19 +1899,23 @@ function uploadLogo(e){
   r.onload=ev=>{
     S.settings.logo=ev.target.result;save();
     const el=document.getElementById('topLogo');
-    el.outerHTML=`<img class="shop-logo" id="topLogo" src="${ev.target.result}" alt="logo">`;
-    document.getElementById('logoPrev').src=ev.target.result;document.getElementById('logoPrev').style.display='block';document.getElementById('logoTxt').style.display='none';
+    if(el&&el.tagName!=='IMG')el.outerHTML=`<img class="shop-logo" id="topLogo" src="${ev.target.result}" alt="logo">`;
+    else if(el)el.src=ev.target.result;
+    const lp=document.getElementById('logoPrev');const lt=document.getElementById('logoTxt');
+    if(lp){lp.src=ev.target.result;lp.style.display='block';}if(lt)lt.style.display='none';
     toast('Logo uploaded','s');
   };r.readAsDataURL(f);
 }
 function removeLogo(){
   S.settings.logo='';save();
-  document.getElementById('logoPrev').style.display='none';document.getElementById('logoTxt').style.display='block';
-  const el=document.getElementById('topLogo');el.outerHTML='<div class="shop-logo-ph" id="topLogo">🏨</div>';
+  const lp=document.getElementById('logoPrev');const lt=document.getElementById('logoTxt');
+  if(lp)lp.style.display='none';if(lt)lt.style.display='block';
+  const el=document.getElementById('topLogo');
+  if(el)el.outerHTML='<div class="shop-logo-ph" id="topLogo">🏨</div>';
   toast('Logo removed','i');
 }
 
-function openM(id){document.getElementById(id).classList.remove('hidden');}
+// ══════════ MODAL HELPERS ══════════
 function closeM(id){document.getElementById(id).classList.add('hidden');}
 document.querySelectorAll('.modal-bg').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.add('hidden');}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-bg').forEach(el=>el.classList.add('hidden'));});
@@ -1585,6 +1924,19 @@ function toast(msg,type='i'){
   const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;
   document.body.appendChild(el);setTimeout(()=>el.remove(),2800);
 }
+
+// Build pin keypad properly (template literals in HTML don't work, build via JS)
+(function buildPinPad(){
+  const body=document.querySelector('#pinModal .modal-body');
+  if(!body)return;
+  const grid=body.querySelector('[style*="grid-template-columns"]');
+  if(!grid)return;
+  const keys=[1,2,3,4,5,6,7,8,9,'','0','⌫'];
+  grid.innerHTML=keys.map(k=>{
+    if(k==='')return`<div></div>`;
+    return`<button onclick="pinKey('${k}')" style="padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r8);font-size:18px;font-weight:600;cursor:pointer;color:var(--text);font-family:'Outfit',sans-serif;transition:all .1s;-webkit-tap-highlight-color:transparent">${k}</button>`;
+  }).join('');
+})();
 
 boot();
 </script>
