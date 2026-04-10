@@ -434,31 +434,62 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
     <!-- Google Sheets -->
     <div class="settings-section">
       <div class="ss-title">📊 Google Sheets Database</div>
-      <div class="fg"><label class="flabel">Google OAuth Client ID</label><input class="finput" id="s-clientId" placeholder="xxxx.apps.googleusercontent.com"></div>
-      <div class="fg"><label class="flabel">Spreadsheet ID</label><input class="finput" id="s-sheetId" placeholder="1BxiMVs0XRA..."></div>
+
+      <!-- Step indicator -->
+      <div style="display:flex;gap:0;margin-bottom:16px;border-radius:var(--r8);overflow:hidden;border:1px solid var(--border)">
+        <div id="step1ind" style="flex:1;padding:7px 4px;font-size:10px;font-weight:600;text-align:center;background:var(--accent-dim);color:var(--accent);border-right:1px solid var(--border)">1 · Config</div>
+        <div id="step2ind" style="flex:1;padding:7px 4px;font-size:10px;font-weight:600;text-align:center;background:var(--bg3);color:var(--text3);border-right:1px solid var(--border)">2 · Sign In</div>
+        <div id="step3ind" style="flex:1;padding:7px 4px;font-size:10px;font-weight:600;text-align:center;background:var(--bg3);color:var(--text3)">3 · Sync</div>
+      </div>
+
+      <!-- Client ID -->
+      <div class="fg">
+        <label class="flabel">① Google OAuth Client ID</label>
+        <input class="finput" id="s-clientId" placeholder="xxxx.apps.googleusercontent.com" oninput="validateSheetInputs()">
+        <div style="font-size:10px;color:var(--text3);margin-top:3px">From Google Cloud Console → APIs &amp; Services → Credentials</div>
+      </div>
+
+      <!-- Spreadsheet — accepts full URL or just ID -->
+      <div class="fg">
+        <label class="flabel">② Spreadsheet ID or Full URL</label>
+        <div style="display:flex;gap:6px">
+          <input class="finput" id="s-sheetId" placeholder="Paste full URL or just the ID" oninput="autoExtractSheetId()" style="flex:1">
+          <button class="btn btn-ghost btn-sm" onclick="autoExtractSheetId()" style="flex-shrink:0;white-space:nowrap" title="Extract ID from URL">✂ Extract</button>
+        </div>
+        <div id="sheetIdPreview" style="font-size:10px;margin-top:4px;padding:6px 10px;border-radius:6px;display:none"></div>
+        <div style="font-size:10px;color:var(--text3);margin-top:3px">You can paste the full Google Sheets URL — the ID will be extracted automatically</div>
+      </div>
+
+      <!-- Sheet names -->
       <div class="f2">
-        <div class="fg"><label class="flabel">Products Sheet</label><input class="finput" id="s-pSheet" placeholder="Products"></div>
-        <div class="fg"><label class="flabel">Bills Sheet</label><input class="finput" id="s-bSheet" placeholder="Bills"></div>
+        <div class="fg"><label class="flabel">Products Sheet Name</label><input class="finput" id="s-pSheet" placeholder="Products"></div>
+        <div class="fg"><label class="flabel">Bills Sheet Name</label><input class="finput" id="s-bSheet" placeholder="Bills"></div>
       </div>
-      <div class="fg"><label class="flabel">Returns Sheet</label><input class="finput" id="s-rSheet" placeholder="Returns"></div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <button class="btn btn-primary" style="width:100%" onclick="saveSheets()">💾 Save & Connect</button>
-        <button class="btn btn-ghost" style="width:100%" onclick="authGoogle()">🔐 Sign In with Google</button>
-        <button class="btn btn-ghost" style="width:100%" onclick="setupHeaders()">📋 Create Sheet Headers</button>
-        <button class="btn btn-ghost" style="width:100%" onclick="pushAll()">⬆ Push All Data to Sheets</button>
-        <button class="btn btn-ghost" style="width:100%" onclick="pullProducts()">⬇ Pull Products from Sheets</button>
+      <div class="fg"><label class="flabel">Returns Sheet Name</label><input class="finput" id="s-rSheet" placeholder="Returns"></div>
+
+      <!-- Action buttons -->
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+        <button class="btn btn-primary" style="width:100%" id="saveSheetsBtn" onclick="saveSheets()">💾 Step 1 — Save Config</button>
+        <button class="btn btn-ghost" style="width:100%" id="authGoogleBtn" onclick="authGoogle()" disabled>🔐 Step 2 — Sign In with Google</button>
+        <button class="btn btn-ghost" style="width:100%" id="testConnBtn" onclick="testConnection()" disabled>🔗 Step 3 — Test Connection</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" style="flex:1" id="setupHdrBtn" onclick="setupHeaders()" disabled>📋 Setup Headers</button>
+          <button class="btn btn-ghost" style="flex:1" id="pushAllBtn" onclick="pushAll()" disabled>⬆ Push All</button>
+          <button class="btn btn-ghost" style="flex:1" id="pullProdBtn" onclick="pullProducts()" disabled><span class="spinner" id="pullSpinner2" style="display:none"></span>⬇ Pull</button>
+        </div>
       </div>
-      <div class="sync-box info" id="syncStatus">ℹ Configure Client ID & Spreadsheet ID to enable cloud sync.</div>
-      <div class="guide">
-        <strong>📋 Google Sheets Setup</strong><br>
-        1. Go to <strong>console.cloud.google.com</strong><br>
-        2. Create project → Enable <strong>Google Sheets API</strong><br>
-        3. Create <strong>OAuth 2.0 Client ID</strong> (Web Application)<br>
-        4. Add your site URL to Authorised Origins<br>
-        5. Copy Client ID → paste above<br>
-        6. Create a Google Sheet → copy its ID from URL<br>
-        7. Click <strong>Sign In with Google</strong> → then <strong>Create Sheet Headers</strong><br>
-        8. Sheet columns auto-created: Products | Bills | Returns
+
+      <div class="sync-box info" id="syncStatus" style="margin-top:12px">ℹ Paste your Spreadsheet URL or ID above, then tap Save Config.</div>
+
+      <div class="guide" style="margin-top:10px">
+        <strong>📋 Quick Setup (3 steps)</strong><br>
+        <span style="color:var(--accent)">Step 1:</span> Paste your full Google Sheet URL into the field above → tap <strong>Save Config</strong><br>
+        <span style="color:var(--accent)">Step 2:</span> Tap <strong>Sign In with Google</strong> → allow Sheets access<br>
+        <span style="color:var(--accent)">Step 3:</span> Tap <strong>Test Connection</strong> → then <strong>Setup Headers</strong><br><br>
+        <strong>⚠ Common errors:</strong><br>
+        <span style="color:var(--red)">redirect_uri_mismatch</span> → Add <code style="background:var(--bg4);padding:1px 4px;border-radius:3px">${location.origin}</code> to Authorised JavaScript Origins in Google Cloud Console<br>
+        <span style="color:var(--red)">403 forbidden</span> → Share the Google Sheet with your Google account (Editor access)<br>
+        <span style="color:var(--red)">404 not found</span> → Wrong Spreadsheet ID — re-paste the full Sheet URL
       </div>
     </div>
   </div>
@@ -617,6 +648,16 @@ function applySettings(){
   const psEl=document.getElementById('s-printSize');
   if(psEl&&s.printSize)psEl.value=s.printSize;
   document.getElementById('syncDot').className='sync-dot'+(S.settings.sheetId&&S.gToken?' ':'  off');
+  // restore sheet step state
+  if(s.clientId&&s.sheetId){
+    document.getElementById('authGoogleBtn').disabled=false;
+    setStep(S.gToken?3:2);
+  }
+  if(S.gToken){
+    ['testConnBtn','setupHdrBtn','pushAllBtn','pullProdBtn'].forEach(id=>{
+      const el=document.getElementById(id);if(el)el.disabled=false;
+    });
+  }
   applyBtSettings();
 }
 
@@ -1366,15 +1407,239 @@ function saveShop(){
   if(s.tax)document.getElementById('taxIn').value=s.tax;
   toast('Shop info saved','s');
 }
+// ══════════ GOOGLE SHEETS — HELPERS ══════════
+
+// Extract Sheet ID from full URL or raw ID
+function extractSheetId(input){
+  if(!input)return'';
+  input=input.trim();
+  // Full URL pattern: /spreadsheets/d/{ID}/
+  const m=input.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+  if(m)return m[1];
+  // Already looks like an ID (only valid chars, reasonable length)
+  if(/^[a-zA-Z0-9_-]{20,60}$/.test(input))return input;
+  return input; // return as-is, let the user see what's wrong
+}
+
+function autoExtractSheetId(){
+  const inp=document.getElementById('s-sheetId');
+  const raw=inp.value.trim();
+  const id=extractSheetId(raw);
+  const prev=document.getElementById('sheetIdPreview');
+  if(!raw){prev.style.display='none';return;}
+  if(id!==raw){
+    // We extracted it from a URL — update the field and show confirmation
+    inp.value=id;
+    prev.style.display='block';
+    prev.style.background='var(--green-dim)';
+    prev.style.color='var(--green)';
+    prev.textContent='✅ ID extracted: '+id;
+  } else if(/^[a-zA-Z0-9_-]{20,60}$/.test(id)){
+    prev.style.display='block';
+    prev.style.background='var(--green-dim)';
+    prev.style.color='var(--green)';
+    prev.textContent='✅ Valid ID format: '+id;
+  } else if(raw.length>5){
+    prev.style.display='block';
+    prev.style.background='var(--red-dim)';
+    prev.style.color='var(--red)';
+    prev.textContent='⚠ Could not detect ID — paste the full Google Sheets URL';
+  } else {
+    prev.style.display='none';
+  }
+  validateSheetInputs();
+}
+
+function validateSheetInputs(){
+  const cid=document.getElementById('s-clientId').value.trim();
+  const sid=extractSheetId(document.getElementById('s-sheetId').value.trim());
+  const ready=cid.length>10&&sid.length>20;
+  document.getElementById('authGoogleBtn').disabled=!ready||!S.settings.clientId;
+}
+
+function setStep(n){
+  const colors={1:'var(--accent)',2:'var(--blue)',3:'var(--green)'};
+  [1,2,3].forEach(i=>{
+    const el=document.getElementById('step'+i+'ind');
+    if(!el)return;
+    if(i<n){el.style.background='var(--green-dim)';el.style.color='var(--green)';}
+    else if(i===n){el.style.background='var(--accent-dim)';el.style.color='var(--accent)';}
+    else{el.style.background='var(--bg3)';el.style.color='var(--text3)';}
+  });
+}
+
 function saveSheets(){
   const s=S.settings;
   s.clientId=document.getElementById('s-clientId').value.trim();
-  s.sheetId=document.getElementById('s-sheetId').value.trim();
+  // Auto-extract ID from URL if needed
+  const rawSheet=document.getElementById('s-sheetId').value.trim();
+  s.sheetId=extractSheetId(rawSheet);
+  document.getElementById('s-sheetId').value=s.sheetId; // update field to show clean ID
   s.pSheet=document.getElementById('s-pSheet').value.trim()||'Products';
   s.bSheet=document.getElementById('s-bSheet').value.trim()||'Bills';
   s.rSheet=document.getElementById('s-rSheet').value.trim()||'Returns';
-  save();toast('Sheets config saved','s');
-  setSyncBox('info','💾 Settings saved. Click Sign In with Google.');
+
+  // Validate
+  if(!s.clientId){setSyncBox('err','❌ Client ID is empty — paste your OAuth Client ID');return;}
+  if(!s.sheetId||s.sheetId.length<20){setSyncBox('err','❌ Spreadsheet ID looks wrong — paste the full Google Sheets URL');return;}
+
+  save();
+  setStep(2);
+  document.getElementById('authGoogleBtn').disabled=false;
+  document.getElementById('sheetIdPreview').style.display='block';
+  document.getElementById('sheetIdPreview').style.background='var(--green-dim)';
+  document.getElementById('sheetIdPreview').style.color='var(--green)';
+  document.getElementById('sheetIdPreview').textContent='✅ Saved ID: '+s.sheetId;
+  setSyncBox('info','✅ Config saved! Now tap Step 2 — Sign In with Google.');
+  toast('Config saved','s');
+}
+
+// ══════════ GOOGLE OAUTH ══════════
+function authGoogle(){
+  const cid=S.settings.clientId||document.getElementById('s-clientId').value.trim();
+  if(!cid){setSyncBox('err','❌ Save Config first (Step 1)');return;}
+  if(!S.settings.sheetId){setSyncBox('err','❌ Spreadsheet ID missing — complete Step 1 first');return;}
+  setSyncBox('info','🔐 Opening Google sign-in...');
+  try{
+    const cl=google.accounts.oauth2.initTokenClient({
+      client_id:cid,
+      scope:'https://www.googleapis.com/auth/spreadsheets',
+      callback:(resp)=>{
+        if(resp.error){
+          let msg='❌ Auth error: '+resp.error;
+          if(resp.error==='redirect_uri_mismatch'||resp.error==='invalid_client')
+            msg='❌ redirect_uri_mismatch — Add this origin to Google Cloud Console:\n'+location.origin;
+          setSyncBox('err',msg);toast('Auth failed','e');return;
+        }
+        S.gToken=resp.access_token;
+        document.getElementById('syncDot').className='sync-dot';
+        setStep(3);
+        document.getElementById('testConnBtn').disabled=false;
+        document.getElementById('setupHdrBtn').disabled=false;
+        document.getElementById('pushAllBtn').disabled=false;
+        document.getElementById('pullProdBtn').disabled=false;
+        setSyncBox('ok','✅ Signed in! Tap Step 3 — Test Connection to verify.');
+        toast('Signed in to Google ✓','s');
+      }
+    });
+    cl.requestAccessToken();
+  }catch(e){
+    let hint='';
+    if(e.message&&e.message.includes('redirect_uri'))hint=' — Add '+location.origin+' to Authorised JavaScript Origins';
+    setSyncBox('err','❌ '+e.message+hint);
+    toast('Error: '+e.message,'e');
+  }
+}
+
+function sheetsURL(sheet,append){
+  const sid=S.settings.sheetId;
+  const base=`https://sheets.googleapis.com/v4/spreadsheets/${sid}/values/${encodeURIComponent(sheet)}`;
+  return append?base+':append?valueInputOption=RAW':base;
+}
+function authHeader(){return{Authorization:`Bearer ${S.gToken}`,'Content-Type':'application/json'};}
+
+// Test the connection by reading sheet metadata
+async function testConnection(){
+  if(!S.gToken){setSyncBox('err','❌ Not signed in — tap Sign In with Google first');return;}
+  if(!S.settings.sheetId){setSyncBox('err','❌ No Spreadsheet ID — complete Step 1 first');return;}
+  setSyncBox('info','🔗 Testing connection...');
+  try{
+    const url=`https://sheets.googleapis.com/v4/spreadsheets/${S.settings.sheetId}?fields=properties.title,sheets.properties.title`;
+    const r=await fetch(url,{headers:{Authorization:`Bearer ${S.gToken}`}});
+    const d=await r.json();
+    if(d.error){
+      let hint='';
+      if(d.error.code===404)hint=' — Check your Spreadsheet ID is correct';
+      if(d.error.code===403)hint=' — Share the Google Sheet with your account (Editor)';
+      if(d.error.code===401)hint=' — Token expired, sign in again';
+      setSyncBox('err',`❌ ${d.error.code}: ${d.error.message}${hint}`);
+      return;
+    }
+    const sheetNames=(d.sheets||[]).map(s=>s.properties.title).join(', ');
+    setSyncBox('ok',`✅ Connected! Spreadsheet: "${d.properties?.title}" · Sheets: ${sheetNames||'(empty)'}`);
+    toast('Connection OK ✓','s');
+    // Enable sync buttons
+    document.getElementById('setupHdrBtn').disabled=false;
+    document.getElementById('pushAllBtn').disabled=false;
+    document.getElementById('pullProdBtn').disabled=false;
+  }catch(e){setSyncBox('err','❌ Network error: '+e.message);}
+}
+
+async function appendRows(sheet,rows){
+  if(!S.gToken||!S.settings.sheetId)return false;
+  try{
+    const r=await fetch(sheetsURL(sheet,true),{method:'POST',headers:authHeader(),body:JSON.stringify({values:rows})});
+    if(!r.ok){const d=await r.json();throw new Error((d.error?.message)||r.status);}
+    return true;
+  }catch(e){console.warn('appendRows:',e.message);return false;}
+}
+
+async function setupHeaders(){
+  if(!S.gToken){toast('Sign in first','e');return;}
+  if(!S.settings.sheetId){toast('Enter Spreadsheet ID','e');return;}
+  setSyncBox('info','🔄 Setting up headers...');
+  try{
+    await appendRows(S.settings.pSheet||'Products',[['id','emoji','name','category','price','stock']]);
+    await appendRows(S.settings.bSheet||'Bills',[['billNo','date','items','subtotal','discountPct','discount','taxPct','tax','total','payment']]);
+    await appendRows(S.settings.rSheet||'Returns',[['returnNo','billNo','date','items','refundAmount']]);
+    setSyncBox('ok','✅ Headers created in all 3 sheets! Ready to use.');
+    toast('Sheet headers created ✓','s');
+  }catch(e){setSyncBox('err','❌ '+e.message);}
+}
+
+async function pushAll(){
+  if(!S.gToken){toast('Sign in first','e');return;}
+  setSyncBox('info','🔄 Pushing data...');
+  let ok=true;
+  try{
+    if(S.products.length)ok=ok&&await appendRows(S.settings.pSheet||'Products',S.products.map(p=>[p.id,p.emoji,p.name,p.cat,p.price,p.stock]));
+    if(S.bills.length)ok=ok&&await appendRows(S.settings.bSheet||'Bills',S.bills.map(b=>[b.billNo,b.date,JSON.stringify(b.items),b.sub,b.dp,b.disc,b.tp,b.tax,b.total,b.pay]));
+    if(S.returns.length)ok=ok&&await appendRows(S.settings.rSheet||'Returns',S.returns.map(r=>[r.retNo,r.billNo,r.date,JSON.stringify(r.items),r.amt]));
+    if(ok){setSyncBox('ok',`✅ Pushed: ${S.products.length} products, ${S.bills.length} bills, ${S.returns.length} returns`);toast('Data pushed ✓','s');}
+    else{setSyncBox('err','⚠ Some rows failed — check sheet names and try again');}
+  }catch(e){setSyncBox('err','❌ '+e.message);toast('Push failed','e');}
+}
+
+async function pullProducts(){
+  const spinners=['pullSpinner','pullSpinner2'].map(id=>document.getElementById(id)).filter(Boolean);
+  spinners.forEach(sp=>sp.style.display='inline-block');
+  if(!S.gToken){toast('Sign in first','e');spinners.forEach(sp=>sp.style.display='none');return;}
+  if(!S.settings.sheetId){toast('Enter Spreadsheet ID','e');spinners.forEach(sp=>sp.style.display='none');return;}
+  try{
+    const r=await fetch(sheetsURL(S.settings.pSheet||'Products'),{headers:authHeader()});
+    const d=await r.json();
+    if(d.error){
+      let hint='';
+      if(d.error.code===404)hint=' (sheet "'+(S.settings.pSheet||'Products')+'" not found — run Setup Headers first)';
+      throw new Error(d.error.message+hint);
+    }
+    const rows=(d.values||[]).slice(1);
+    if(rows.length){
+      S.products=rows.map(r=>({id:r[0]||'',emoji:r[1]||'📦',name:r[2]||'',cat:r[3]||'',price:parseFloat(r[4])||0,stock:parseInt(r[5])||0})).filter(p=>p.id&&p.name);
+      save();renderProdGrid();renderProdList();renderCats();fillCatDL();
+      setSyncBox('ok',`✅ Pulled ${S.products.length} products from Sheets`);
+      toast(`Synced ${S.products.length} products ✓`,'s');
+    }else{toast('No product rows found — run Setup Headers first','i');}
+  }catch(e){setSyncBox('err','❌ '+e.message);toast('Pull failed','e');}
+  spinners.forEach(sp=>sp.style.display='none');
+}
+
+async function pushBill(bill){
+  await appendRows(S.settings.bSheet||'Bills',[[bill.billNo,bill.date,JSON.stringify(bill.items),bill.sub,bill.dp,bill.disc,bill.tp,bill.tax,bill.total,bill.pay]]);
+}
+async function pushProduct(prod){
+  await appendRows(S.settings.pSheet||'Products',[[prod.id,prod.emoji,prod.name,prod.cat,prod.price,prod.stock]]);
+}
+async function pushReturn(ret){
+  await appendRows(S.settings.rSheet||'Returns',[[ret.retNo,ret.billNo,ret.date,JSON.stringify(ret.items),ret.amt]]);
+}
+
+function setSyncBox(type,msg){
+  const el=document.getElementById('syncStatus');
+  if(!el)return;
+  el.className='sync-box '+type;
+  el.textContent=msg;
+  el.title=msg; // full text on hover if truncated
 }
 function uploadLogo(e){
   const f=e.target.files[0];if(!f)return;
