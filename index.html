@@ -197,10 +197,20 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 /* ───── PRINT AREA ───── */
 #printArea{display:none}
 @media print{
-  body *{visibility:hidden}
-  #printArea,#printArea *{visibility:visible}
-  #printArea{display:block!important;position:fixed;top:0;left:0;width:100%;background:#fff;color:#000;padding:12px;font-family:'Courier New',monospace;font-size:12px}
+  @page{margin:0}
+  body *{visibility:hidden!important}
+  #printArea,#printArea *{visibility:visible!important}
+  #printArea{display:block!important;position:fixed!important;top:0!important;left:0!important;width:100%!important;background:#fff!important;color:#000!important;padding:0!important}
 }
+@media print{
+  #printArea.ps-58mm{font-size:10px}
+  #printArea.ps-80mm{font-size:11px}
+  #printArea.ps-a4  {font-size:13px}
+}
+/* force browser page size for thermal (chrome hint) */
+@page thermal58{size:58mm auto;margin:0}
+@page thermal80{size:80mm auto;margin:0}
+@page a4page   {size:A4 portrait;margin:14mm}
 /* ───── TOAST ───── */
 .toast{position:fixed;bottom:calc(var(--nav-h) + var(--safe-bottom) + 12px);left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r12);padding:10px 18px;font-size:13px;font-weight:500;z-index:500;white-space:nowrap;animation:fadeUp .25s ease}
 .toast.s{border-color:rgba(63,185,80,.5);color:var(--green);background:var(--green-dim)}
@@ -335,6 +345,15 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
       <div class="f2">
         <div class="fg"><label class="flabel">Default Tax %</label><input class="finput" type="number" id="s-tax" placeholder="0"></div>
         <div class="fg"><label class="flabel">Receipt Footer</label><input class="finput" id="s-footer" placeholder="Thank you!"></div>
+      </div>
+      <div class="fg">
+        <label class="flabel">🖨 Browser Print Size</label>
+        <select class="fselect" id="s-printSize" onchange="savePrintSize()">
+          <option value="58mm">Thermal 58mm (2¼ inch)</option>
+          <option value="80mm">Thermal 80mm (3⅛ inch)</option>
+          <option value="a4" selected>A4 Paper (Full Page)</option>
+        </select>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px">Applies when printing via browser (not Bluetooth). In browser print dialog also set matching paper size.</div>
       </div>
       <button class="btn btn-primary" style="width:100%" onclick="saveShop()">Save Shop Info</button>
     </div>
@@ -565,8 +584,7 @@ function save(){
   localStorage.setItem('hpos_rn',S.retN);
 }
 
-function defSettings(){return{name:'Grand Hotel',sub:'Restaurant & Bar',addr:'No.1 Main St, Colombo',phone:'+94 11 234 5678',cur:'LKR',tax:'10',footer:'Thank you for visiting!',clientId:'',sheetId:'',pSheet:'Products',bSheet:'Bills',rSheet:'Returns',logo:''};}
-
+function defSettings(){return{name:'Grand Hotel',sub:'Restaurant & Bar',addr:'No.1 Main St, Colombo',phone:'+94 11 234 5678',cur:'LKR',tax:'10',footer:'Thank you for visiting!',clientId:'',sheetId:'',pSheet:'Products',bSheet:'Bills',rSheet:'Returns',logo:'',printSize:'a4',btAutoPrint:false,btPaperWidth:'48'};}
 function defProds(){return[
   {id:'P001',emoji:'🍛',name:'Rice & Curry',cat:'Food',price:550,stock:50},
   {id:'P002',emoji:'🍔',name:'Beef Burger',cat:'Food',price:890,stock:30},
@@ -595,6 +613,9 @@ function applySettings(){
   }
   const fm={name:'s-name',sub:'s-sub',addr:'s-addr',phone:'s-phone',cur:'s-cur',tax:'s-tax',footer:'s-footer',clientId:'s-clientId',sheetId:'s-sheetId',pSheet:'s-pSheet',bSheet:'s-bSheet',rSheet:'s-rSheet'};
   Object.entries(fm).forEach(([k,id])=>{const el=document.getElementById(id);if(el)el.value=s[k]||'';});
+  // restore print size
+  const psEl=document.getElementById('s-printSize');
+  if(psEl&&s.printSize)psEl.value=s.printSize;
   document.getElementById('syncDot').className='sync-dot'+(S.settings.sheetId&&S.gToken?' ':'  off');
   applyBtSettings();
 }
@@ -733,32 +754,98 @@ function checkout(){
 }
 
 // ══════════ PRINT (browser fallback) ══════════
+function getPrintSize(){return S.settings.printSize||'a4';}
+
 function printBill(bill){
   if(BT.device&&BT.char){btPrint(bill);return;}
-  document.getElementById('printArea').innerHTML=buildReceiptHTML(bill);
-  setTimeout(()=>window.print(),200);
+  const sz=getPrintSize();
+  const area=document.getElementById('printArea');
+  area.className='ps-'+sz;
+  area.innerHTML=buildReceiptHTML(bill,sz);
+  // Inject a temporary @page rule matching selected size
+  const styleId='__psize__';
+  let st=document.getElementById(styleId);
+  if(!st){st=document.createElement('style');st.id=styleId;document.head.appendChild(st);}
+  if(sz==='58mm') st.textContent='@page{size:58mm auto;margin:0}';
+  else if(sz==='80mm') st.textContent='@page{size:80mm auto;margin:0}';
+  else st.textContent='@page{size:A4 portrait;margin:14mm}';
+  setTimeout(()=>{window.print();setTimeout(()=>{st.textContent='';},500);},200);
 }
 
-function buildReceiptHTML(bill){
+function buildReceiptHTML(bill,size){
+  size=size||getPrintSize();
   const s=S.settings,cur=s.cur||'LKR';
-  const logo=s.logo?`<img src="${s.logo}" style="max-width:100px;max-height:50px;display:block;margin:0 auto 8px" alt="logo">`:'';
-  return`<div style="font-family:'Courier New',monospace;font-size:12px;line-height:1.8;color:#111;max-width:320px;margin:0 auto">
-    ${logo}<div style="text-align:center;border-bottom:1px dashed #aaa;padding-bottom:10px;margin-bottom:10px">
-    <strong style="font-size:15px">${s.name||'Hotel POS'}</strong><br><span style="font-size:10px">${s.sub||''}</span><br><span style="font-size:10px">${s.addr||''}</span><br><span style="font-size:10px">${s.phone||''}</span></div>
-    <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:6px"><span><b>Bill:</b> ${bill.billNo}</span><span>${new Date(bill.date).toLocaleString()}</span></div>
-    <div style="font-size:10px;margin-bottom:8px"><b>Payment:</b> ${bill.pay.toUpperCase()}</div>
-    <table style="width:100%;font-size:11px;border-collapse:collapse">
-      <tr style="border-bottom:1px dashed #aaa"><th style="text-align:left;padding:3px 0">Item</th><th style="text-align:center;padding:3px 0">Qty</th><th style="text-align:right;padding:3px 0">Amt</th></tr>
-      ${bill.items.map(i=>`<tr><td style="padding:3px 0">${i.emoji?i.emoji+' ':''}${i.name}</td><td style="text-align:center;padding:3px 0">${i.qty}</td><td style="text-align:right;padding:3px 0;font-weight:600">${cur} ${(i.price*i.qty).toFixed(2)}</td></tr>`).join('')}
-    </table>
-    <div style="border-top:1px dashed #aaa;margin-top:6px;padding-top:6px;font-size:11px">
-      <div style="display:flex;justify-content:space-between"><span>Subtotal</span><span>${cur} ${bill.sub.toFixed(2)}</span></div>
-      ${bill.disc>0?`<div style="display:flex;justify-content:space-between"><span>Discount (${bill.dp}%)</span><span>- ${cur} ${bill.disc.toFixed(2)}</span></div>`:''}
-      ${bill.tax>0?`<div style="display:flex;justify-content:space-between"><span>Tax (${bill.tp}%)</span><span>+ ${cur} ${bill.tax.toFixed(2)}</span></div>`:''}
-      <div style="display:flex;justify-content:space-between;border-top:1px solid #111;margin-top:6px;padding-top:6px;font-size:14px;font-weight:bold"><span>TOTAL</span><span>${cur} ${bill.total.toFixed(2)}</span></div>
+  const logo=s.logo?`<img src="${s.logo}" style="max-width:80px;max-height:40px;display:block;margin:0 auto 6px" alt="logo">`:'';
+  const isA4=(size==='a4');
+  const maxW=isA4?'720px':'100%';
+  const fBase=isA4?'13px':'11px';
+  const fHeader=isA4?'18px':'14px';
+  const pad=isA4?'24px':'8px';
+
+  return`<div style="font-family:'Courier New',monospace;font-size:${fBase};line-height:1.75;color:#111;max-width:${maxW};margin:0 auto;padding:${pad};box-sizing:border-box">
+    ${logo}
+    <div style="text-align:center;border-bottom:1px dashed #999;padding-bottom:10px;margin-bottom:10px">
+      <strong style="font-size:${fHeader}">${s.name||'Hotel POS'}</strong><br>
+      ${s.sub?`<span>${s.sub}</span><br>`:''}
+      ${s.addr?`<span style="font-size:${isA4?'11px':'10px'}">${s.addr}</span><br>`:''}
+      ${s.phone?`<span style="font-size:${isA4?'11px':'10px'}">${s.phone}</span>`:''}
     </div>
-    <div style="text-align:center;margin-top:12px;font-size:10px;border-top:1px dashed #aaa;padding-top:10px;color:#555">${s.footer||'Thank you!'}</div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+      <span><b>Bill No:</b> ${bill.billNo}</span>
+      <span>${new Date(bill.date).toLocaleString()}</span>
+    </div>
+    <div style="margin-bottom:8px"><b>Payment:</b> ${bill.pay.toUpperCase()}</div>
+    ${isA4?`
+    <table style="width:100%;font-size:${fBase};border-collapse:collapse;margin-bottom:8px">
+      <thead>
+        <tr style="border-bottom:2px solid #333">
+          <th style="text-align:left;padding:6px 4px">#</th>
+          <th style="text-align:left;padding:6px 4px">Item</th>
+          <th style="text-align:center;padding:6px 4px">Qty</th>
+          <th style="text-align:right;padding:6px 4px">Unit Price</th>
+          <th style="text-align:right;padding:6px 4px">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${bill.items.map((i,n)=>`<tr style="border-bottom:1px solid #ddd">
+          <td style="padding:5px 4px;color:#666">${n+1}</td>
+          <td style="padding:5px 4px">${i.emoji?i.emoji+' ':''}${i.name}</td>
+          <td style="text-align:center;padding:5px 4px">${i.qty}</td>
+          <td style="text-align:right;padding:5px 4px">${cur} ${i.price.toFixed(2)}</td>
+          <td style="text-align:right;padding:5px 4px;font-weight:600">${cur} ${(i.price*i.qty).toFixed(2)}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    <div style="display:flex;justify-content:flex-end">
+      <div style="min-width:300px;font-size:${fBase}">
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee"><span>Subtotal</span><span>${cur} ${bill.sub.toFixed(2)}</span></div>
+        ${bill.disc>0?`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee"><span>Discount (${bill.dp}%)</span><span style="color:#22863a">- ${cur} ${bill.disc.toFixed(2)}</span></div>`:''}
+        ${bill.tax>0?`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee"><span>Tax (${bill.tp}%)</span><span>+ ${cur} ${bill.tax.toFixed(2)}</span></div>`:''}
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:2px solid #111;font-size:16px;font-weight:bold"><span>TOTAL</span><span>${cur} ${bill.total.toFixed(2)}</span></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:24px;padding-top:12px;border-top:1px dashed #aaa;font-size:11px;color:#666">${s.footer||'Thank you for visiting!'}</div>
+    `:
+    /* ── Thermal receipt layout ── */`
+    <table style="width:100%;font-size:${fBase};border-collapse:collapse">
+      <tr style="border-bottom:1px dashed #aaa"><th style="text-align:left;padding:2px 0">Item</th><th style="text-align:center;padding:2px 0">Qty</th><th style="text-align:right;padding:2px 0">Amt</th></tr>
+      ${bill.items.map(i=>`<tr><td style="padding:2px 0">${i.emoji?i.emoji+' ':''}${i.name}</td><td style="text-align:center;padding:2px 0">${i.qty}</td><td style="text-align:right;padding:2px 0;font-weight:600">${cur} ${(i.price*i.qty).toFixed(2)}</td></tr>`).join('')}
+    </table>
+    <div style="border-top:1px dashed #aaa;margin-top:4px;padding-top:4px">
+      <div style="display:flex;justify-content:space-between"><span>Subtotal</span><span>${cur} ${bill.sub.toFixed(2)}</span></div>
+      ${bill.disc>0?`<div style="display:flex;justify-content:space-between"><span>Disc(${bill.dp}%)</span><span>- ${cur} ${bill.disc.toFixed(2)}</span></div>`:''}
+      ${bill.tax>0?`<div style="display:flex;justify-content:space-between"><span>Tax(${bill.tp}%)</span><span>+ ${cur} ${bill.tax.toFixed(2)}</span></div>`:''}
+      <div style="display:flex;justify-content:space-between;border-top:1px solid #111;margin-top:4px;padding-top:4px;font-size:13px;font-weight:bold"><span>TOTAL</span><span>${cur} ${bill.total.toFixed(2)}</span></div>
+    </div>
+    <div style="text-align:center;margin-top:8px;font-size:10px;border-top:1px dashed #aaa;padding-top:8px">${s.footer||'Thank you!'}</div>
+    `}
   </div>`;
+}
+
+function savePrintSize(){
+  S.settings.printSize=document.getElementById('s-printSize')?.value||'a4';
+  save();
+  toast('Print size saved','s');
 }
 
 // ══════════════════════════════════════════════════
@@ -1274,6 +1361,7 @@ function saveShop(){
   s.cur=document.getElementById('s-cur').value;
   s.tax=document.getElementById('s-tax').value;
   s.footer=document.getElementById('s-footer').value;
+  s.printSize=document.getElementById('s-printSize')?.value||'a4';
   save();applySettings();
   if(s.tax)document.getElementById('taxIn').value=s.tax;
   toast('Shop info saved','s');
