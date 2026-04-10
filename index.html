@@ -555,6 +555,10 @@ function boot(){
   applyBtSettings();
   const od=document.getElementById('originDisplay');
   if(od)od.textContent=location.origin;
+  // Auto-connect GAS on every load — no cancel needed
+  if(S.settings.gasUrl){
+    setTimeout(()=>gasAutoConnect(),800);
+  }
 }
 
 function copyOrigin(){
@@ -575,6 +579,12 @@ function load(){
     S.billN=parseInt(localStorage.getItem('hpos_bn')||'1');
     S.retN=parseInt(localStorage.getItem('hpos_rn')||'1');
   }catch(e){S.products=defProds();S.bills=[];S.returns=[];S.settings=defSettings();}
+  // Always ensure GAS URL is set (even on first load / after clear)
+  if(!S.settings.gasUrl)S.settings.gasUrl=GAS_DEFAULT_URL;
+  if(!S.settings.gasPSheet)S.settings.gasPSheet='Products';
+  if(!S.settings.gasBSheet)S.settings.gasBSheet='Bills';
+  if(!S.settings.gasRSheet)S.settings.gasRSheet='Returns';
+  if(!S.settings.syncMode)S.settings.syncMode='gas';
 }
 
 function save(){
@@ -586,7 +596,8 @@ function save(){
   localStorage.setItem('hpos_rn',S.retN);
 }
 
-function defSettings(){return{name:'Grand Hotel',sub:'Restaurant & Bar',addr:'No.1 Main St, Colombo',phone:'+94 11 234 5678',cur:'LKR',tax:'10',footer:'Thank you for visiting!',clientId:'',sheetId:'',pSheet:'Products',bSheet:'Bills',rSheet:'Returns',logo:'',printSize:'a4',btAutoPrint:false,btPaperWidth:'48'};}
+const GAS_DEFAULT_URL='https://script.google.com/macros/s/AKfycbwMkYvyUhzE9QssX_8AtxVnu0BDaPWq1qfXPU1PEJqHddeFdDrEjXTAlzH7KVTGMwu-/exec';
+function defSettings(){return{name:'Grand Hotel',sub:'Restaurant & Bar',addr:'No.1 Main St, Colombo',phone:'+94 11 234 5678',cur:'LKR',tax:'10',footer:'Thank you for visiting!',clientId:'',sheetId:'',pSheet:'Products',bSheet:'Bills',rSheet:'Returns',logo:'',printSize:'a4',btAutoPrint:false,btPaperWidth:'48',gasUrl:GAS_DEFAULT_URL,gasPSheet:'Products',gasBSheet:'Bills',gasRSheet:'Returns',syncMode:'gas'};}
 function defProds(){return[
   {id:'P001',emoji:'🍛',name:'Rice & Curry',cat:'Food',price:550,stock:50},
   {id:'P002',emoji:'🍔',name:'Beef Burger',cat:'Food',price:890,stock:30},
@@ -1261,23 +1272,27 @@ function switchMode(mode){
 }
 
 function gasValidate(){
-  const url=document.getElementById('gas-url').value.trim();
+  const inputEl=document.getElementById('gas-url');
+  const url=(inputEl?inputEl.value.trim():'')||S.settings.gasUrl||'';
   const ok=url.startsWith('https://script.google.com/macros/s/');
   ['gasTestBtn','gasSetupBtn','gasPushBtn','gasPullBtn'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=!ok;});
 }
 
 function gasSave(){
-  const url=document.getElementById('gas-url').value.trim();
+  const inputEl=document.getElementById('gas-url');
+  const url=inputEl?inputEl.value.trim():S.settings.gasUrl;
   if(!url){setGasBox('err','❌ Paste your Web App URL first');return;}
   if(!url.startsWith('https://script.google.com/macros/s/')){setGasBox('err','❌ URL must start with https://script.google.com/macros/s/...');return;}
   S.settings.gasUrl=url;
-  S.settings.gasPSheet=document.getElementById('gas-pSheet').value.trim()||'Products';
-  S.settings.gasBSheet=document.getElementById('gas-bSheet').value.trim()||'Bills';
-  S.settings.gasRSheet=document.getElementById('gas-rSheet').value.trim()||'Returns';
+  const gp=document.getElementById('gas-pSheet');const gb=document.getElementById('gas-bSheet');const gr=document.getElementById('gas-rSheet');
+  S.settings.gasPSheet=(gp?gp.value.trim():'')||'Products';
+  S.settings.gasBSheet=(gb?gb.value.trim():'')||'Bills';
+  S.settings.gasRSheet=(gr?gr.value.trim():'')||'Returns';
   save();gasValidate();
-  setGasBox('ok','✅ Config saved! Tap Test Connection to verify.');
+  setGasBox('info','🔗 Saved! Connecting...');
   toast('Apps Script config saved','s');
-  document.getElementById('syncDot').className='sync-dot';
+  document.getElementById('syncDot').className='sync-dot syncing';
+  gasAutoConnect();
 }
 
 function setGasBox(type,msg){
@@ -1286,13 +1301,40 @@ function setGasBox(type,msg){
 }
 
 async function gasCall(action,payload={}){
-  const url=S.settings.gasUrl;
+  const url=S.settings.gasUrl||GAS_DEFAULT_URL;
   if(!url)throw new Error('No Web App URL configured');
   const body=JSON.stringify({action,...payload});
-  const r=await fetch(url,{method:'POST',body,headers:{'Content-Type':'text/plain'}});
-  if(!r.ok)throw new Error('HTTP '+r.status);
+  // Use no-cors-safe approach: POST with text/plain (GAS accepts this)
+  const r=await fetch(url,{
+    method:'POST',
+    body,
+    headers:{'Content-Type':'text/plain'},
+    redirect:'follow'
+  });
+  if(!r.ok)throw new Error('HTTP '+r.status+' — check Web App is deployed as "Anyone" access');
   const text=await r.text();
-  try{return JSON.parse(text);}catch(e){throw new Error('Invalid JSON response: '+text.substring(0,100));}
+  try{return JSON.parse(text);}catch(e){throw new Error('Invalid JSON: '+text.substring(0,120));}
+}
+
+// Auto-connect silently on load/save — shows status dot, no popup
+async function gasAutoConnect(){
+  try{
+    document.getElementById('syncDot').className='sync-dot syncing';
+    const d=await gasCall('ping');
+    if(d.ok){
+      document.getElementById('syncDot').className='sync-dot';
+      setGasBox('ok','✅ Connected to "'+d.title+'" · Sheets: '+d.sheets.join(', '));
+      gasValidate();
+    } else {
+      document.getElementById('syncDot').className='sync-dot off';
+      setGasBox('err','❌ '+(d.error||'Connection failed'));
+    }
+  }catch(e){
+    document.getElementById('syncDot').className='sync-dot off';
+    // Silently fail on boot — user can tap Test Connection manually
+    const gasBox=document.getElementById('gasStatus');
+    if(gasBox&&gasBox.className.includes('info'))setGasBox('err','⚠ Auto-connect failed: '+e.message+' — tap Test Connection');
+  }
 }
 
 async function gasTest(){
