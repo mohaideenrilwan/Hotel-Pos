@@ -221,6 +221,19 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 /* ───── GUIDE BOX ───── */
 .guide{background:var(--bg3);border-radius:var(--r12);padding:14px;font-size:12px;color:var(--text2);line-height:1.7;margin-top:12px}
 .guide strong{color:var(--text);font-size:13px}
+/* ───── BLUETOOTH PRINTER ───── */
+.bt-status-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r8);border:1px solid var(--border);background:var(--bg3);margin-bottom:10px}
+.bt-dot{width:10px;height:10px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background .3s}
+.bt-dot.connected{background:var(--green);box-shadow:0 0 6px rgba(63,185,80,.5)}
+.bt-dot.scanning{background:var(--accent);animation:pulse .7s infinite}
+.bt-dot.error{background:var(--red)}
+.bt-name{flex:1;font-size:13px;font-weight:500}
+.bt-sub{font-size:10px;color:var(--text3);margin-top:1px}
+.bt-actions{display:flex;gap:6px}
+.bt-test-receipt{border:1px dashed var(--border2);border-radius:var(--r8);padding:10px;font-family:'Courier New',monospace;font-size:11px;color:var(--text2);background:var(--bg);margin-top:8px;white-space:pre;overflow-x:auto;max-height:200px;overflow-y:auto}
+.print-fab{position:fixed;bottom:calc(var(--nav-h) + var(--safe-bottom) + 14px);right:16px;width:48px;height:48px;border-radius:50%;background:var(--blue);border:none;color:#fff;font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(88,166,255,.4);z-index:100;transition:transform .2s}
+.print-fab.show{display:flex}
+.print-fab:active{transform:scale(.92)}
 </style>
 </head>
 <body>
@@ -337,6 +350,68 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
       <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="removeLogo()">Remove Logo</button>
     </div>
 
+    <!-- Bluetooth Printer -->
+    <div class="settings-section">
+      <div class="ss-title">🖨 Bluetooth Thermal Printer</div>
+
+      <!-- Status bar -->
+      <div class="bt-status-bar" id="btStatusBar">
+        <div class="bt-dot" id="btDot"></div>
+        <div style="flex:1">
+          <div class="bt-name" id="btDevName">No printer connected</div>
+          <div class="bt-sub" id="btDevSub">Web Bluetooth · Chrome/Edge on Android/Desktop</div>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button class="btn btn-primary" style="width:100%" id="btConnBtn" onclick="btConnect()">📡 Scan & Connect Printer</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" style="flex:1" id="btTestBtn" onclick="btTest()" disabled>🖨 Test Print</button>
+          <button class="btn btn-danger" style="flex:1" id="btDiscBtn" onclick="btDisconnect()" disabled>✕ Disconnect</button>
+        </div>
+      </div>
+
+      <!-- Paper width selector -->
+      <div class="fg" style="margin-top:12px">
+        <label class="flabel">Paper Width</label>
+        <select class="fselect" id="btPaperWidth" onchange="saveBtSettings()">
+          <option value="32">58mm — 32 chars/line</option>
+          <option value="48" selected>80mm — 48 chars/line</option>
+        </select>
+      </div>
+
+      <!-- Auto-print toggle -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--border);margin-top:4px">
+        <div>
+          <div style="font-size:13px;font-weight:500">Auto-print on Checkout</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">Automatically print receipt after each sale</div>
+        </div>
+        <label style="position:relative;display:inline-block;width:42px;height:24px;flex-shrink:0">
+          <input type="checkbox" id="btAutoPrint" onchange="saveBtSettings()" style="opacity:0;width:0;height:0">
+          <span id="btToggleSpan" style="position:absolute;cursor:pointer;inset:0;background:var(--bg4);border-radius:12px;transition:.3s;border:1px solid var(--border2)">
+            <span style="position:absolute;content:'';height:18px;width:18px;left:2px;top:2px;background:var(--text3);border-radius:50%;transition:.3s" id="btToggleThumb"></span>
+          </span>
+        </label>
+      </div>
+
+      <!-- Test receipt preview -->
+      <div id="btTestArea" style="display:none">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:6px;margin-top:8px">Last receipt preview:</div>
+        <div class="bt-test-receipt" id="btReceiptPreview"></div>
+      </div>
+
+      <div class="guide" style="margin-top:10px">
+        <strong>📋 Bluetooth Printer Setup</strong><br>
+        1. Pair printer with your device via <strong>OS Bluetooth settings</strong> first<br>
+        2. Tap <strong>Scan &amp; Connect</strong> — select your printer from the list<br>
+        3. Works with any ESC/POS thermal printer (58mm &amp; 80mm)<br>
+        4. Compatible printers: <strong>GOOJPRT, Xprinter, Rongta, Epson TM</strong>, etc.<br>
+        5. Requires <strong>Chrome / Edge</strong> on Android or Desktop<br>
+        <span style="color:var(--red)">⚠ iOS Safari does NOT support Web Bluetooth</span>
+      </div>
+    </div>
+
     <!-- Google Sheets -->
     <div class="settings-section">
       <div class="ss-title">📊 Google Sheets Database</div>
@@ -369,6 +444,9 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
     </div>
   </div>
 </div>
+
+<!-- PRINT FAB (Bluetooth quick-print) -->
+<button class="print-fab" id="printFab" title="Print last bill" onclick="btPrintLastBill()">🖨</button>
 
 </div><!-- /content -->
 
@@ -464,6 +542,7 @@ function boot(){
   fillCatDL();
   if(S.settings.tax) document.getElementById('taxIn').value=S.settings.tax;
   calcTotals();
+  applyBtSettings();
 }
 
 function load(){
@@ -517,6 +596,7 @@ function applySettings(){
   const fm={name:'s-name',sub:'s-sub',addr:'s-addr',phone:'s-phone',cur:'s-cur',tax:'s-tax',footer:'s-footer',clientId:'s-clientId',sheetId:'s-sheetId',pSheet:'s-pSheet',bSheet:'s-bSheet',rSheet:'s-rSheet'};
   Object.entries(fm).forEach(([k,id])=>{const el=document.getElementById(id);if(el)el.value=s[k]||'';});
   document.getElementById('syncDot').className='sync-dot'+(S.settings.sheetId&&S.gToken?' ':'  off');
+  applyBtSettings();
 }
 
 function C(){return S.settings.cur||'LKR';}
@@ -643,7 +723,8 @@ function checkout(){
   S.cart.forEach(ci=>{const p=S.products.find(x=>x.id===ci.id);if(p)p.stock=Math.max(0,p.stock-ci.qty);});
   save();
   closeCart();
-  printBill(bill);
+  if(S.settings.btAutoPrint&&BT.char){btPrint(bill);}
+  else{printBill(bill);}
   S.cart=[];renderCart();calcTotals();renderProdGrid();
   document.getElementById('discIn').value='';
   document.getElementById('taxIn').value=S.settings.tax||'';
@@ -651,13 +732,14 @@ function checkout(){
   toast(`✓ ${billNo} created`,'s');
 }
 
-// ══════════ PRINT ══════════
+// ══════════ PRINT (browser fallback) ══════════
 function printBill(bill){
-  document.getElementById('printArea').innerHTML=buildReceipt(bill);
+  if(BT.device&&BT.char){btPrint(bill);return;}
+  document.getElementById('printArea').innerHTML=buildReceiptHTML(bill);
   setTimeout(()=>window.print(),200);
 }
 
-function buildReceipt(bill){
+function buildReceiptHTML(bill){
   const s=S.settings,cur=s.cur||'LKR';
   const logo=s.logo?`<img src="${s.logo}" style="max-width:100px;max-height:50px;display:block;margin:0 auto 8px" alt="logo">`:'';
   return`<div style="font-family:'Courier New',monospace;font-size:12px;line-height:1.8;color:#111;max-width:320px;margin:0 auto">
@@ -667,7 +749,7 @@ function buildReceipt(bill){
     <div style="font-size:10px;margin-bottom:8px"><b>Payment:</b> ${bill.pay.toUpperCase()}</div>
     <table style="width:100%;font-size:11px;border-collapse:collapse">
       <tr style="border-bottom:1px dashed #aaa"><th style="text-align:left;padding:3px 0">Item</th><th style="text-align:center;padding:3px 0">Qty</th><th style="text-align:right;padding:3px 0">Amt</th></tr>
-      ${bill.items.map(i=>`<tr><td style="padding:3px 0">${i.emoji} ${i.name}</td><td style="text-align:center;padding:3px 0">${i.qty}</td><td style="text-align:right;padding:3px 0;font-weight:600">${cur} ${(i.price*i.qty).toFixed(2)}</td></tr>`).join('')}
+      ${bill.items.map(i=>`<tr><td style="padding:3px 0">${i.emoji?i.emoji+' ':''}${i.name}</td><td style="text-align:center;padding:3px 0">${i.qty}</td><td style="text-align:right;padding:3px 0;font-weight:600">${cur} ${(i.price*i.qty).toFixed(2)}</td></tr>`).join('')}
     </table>
     <div style="border-top:1px dashed #aaa;margin-top:6px;padding-top:6px;font-size:11px">
       <div style="display:flex;justify-content:space-between"><span>Subtotal</span><span>${cur} ${bill.sub.toFixed(2)}</span></div>
@@ -677,6 +759,310 @@ function buildReceipt(bill){
     </div>
     <div style="text-align:center;margin-top:12px;font-size:10px;border-top:1px dashed #aaa;padding-top:10px;color:#555">${s.footer||'Thank you!'}</div>
   </div>`;
+}
+
+// ══════════════════════════════════════════════════
+// BLUETOOTH THERMAL PRINTER  (ESC/POS via Web BT)
+// ══════════════════════════════════════════════════
+const BT={device:null,server:null,char:null,lastBill:null};
+
+// Known ESC/POS BLE service / characteristic UUIDs
+const BT_UUIDS=[
+  {svc:'000018f0-0000-1000-8000-00805f9b34fb',chr:'00002af1-0000-1000-8000-00805f9b34fb'}, // common generic
+  {svc:'e7810a71-73ae-499d-8c15-faa9aef0c3f2',chr:'bef8d6c9-9c21-4c9e-b632-bd58c1009f9f'}, // GOOJPRT / Xprinter
+  {svc:'49535343-fe7d-4ae5-8fa9-9fafd205e455',chr:'49535343-8841-43f4-a8d4-ecbe34729bb3'}, // Microchip RN
+  {svc:'0000ff00-0000-1000-8000-00805f9b34fb',chr:'0000ff02-0000-1000-8000-00805f9b34fb'}, // common clone
+  {svc:'0000ffe0-0000-1000-8000-00805f9b34fb',chr:'0000ffe1-0000-1000-8000-00805f9b34fb'}, // HM-10 style
+];
+
+// ── ESC/POS command builder ──────────────────────
+const ESC=0x1B,GS=0x1D;
+function escCmd(...bytes){return new Uint8Array(bytes);}
+
+const ESCPOS={
+  init:       ()=>escCmd(ESC,0x40),
+  alignLeft:  ()=>escCmd(ESC,0x61,0x00),
+  alignCenter:()=>escCmd(ESC,0x61,0x01),
+  alignRight: ()=>escCmd(ESC,0x61,0x02),
+  bold:       (on)=>escCmd(ESC,0x45,on?1:0),
+  doubleH:    (on)=>escCmd(ESC,0x21,on?0x10:0x00),
+  feed:       (n=1)=>escCmd(ESC,0x64,n),
+  cut:        ()=>escCmd(GS,0x56,0x41,0x03),
+  text:       (str)=>{
+    const enc=new TextEncoder();
+    return enc.encode(str);
+  },
+  line:(str)=>{
+    const enc=new TextEncoder();
+    return enc.encode(str+'\n');
+  },
+  dashes:(n)=>ESCPOS.line('-'.repeat(n)),
+  // right-align two columns: left text, right text, total width
+  twoCol:(left,right,width)=>{
+    const gap=width-left.length-right.length;
+    return ESCPOS.line(left+' '.repeat(Math.max(1,gap))+right);
+  },
+};
+
+// Merge multiple Uint8Arrays into one
+function mergeBytes(...arrays){
+  const total=arrays.reduce((s,a)=>s+a.length,0);
+  const out=new Uint8Array(total);
+  let offset=0;
+  for(const a of arrays){out.set(a,offset);offset+=a.length;}
+  return out;
+}
+
+// ── Build ESC/POS receipt bytes ──────────────────
+function buildEscPosReceipt(bill){
+  const s=S.settings,cur=s.cur||'LKR';
+  const W=parseInt(document.getElementById('btPaperWidth')?.value||'48');
+  const parts=[];
+  const p=(...a)=>parts.push(...a);
+
+  p(ESCPOS.init());
+  p(ESCPOS.alignCenter());
+  p(ESCPOS.bold(true),ESCPOS.doubleH(true));
+  p(ESCPOS.line((s.name||'Hotel POS').substring(0,W)));
+  p(ESCPOS.doubleH(false));
+  if(s.sub) p(ESCPOS.line(s.sub.substring(0,W)));
+  if(s.addr) p(ESCPOS.line(s.addr.substring(0,W)));
+  if(s.phone) p(ESCPOS.line(s.phone.substring(0,W)));
+  p(ESCPOS.bold(false));
+  p(ESCPOS.dashes(W));
+
+  p(ESCPOS.alignLeft());
+  const dt=new Date(bill.date);
+  p(ESCPOS.twoCol('Bill: '+bill.billNo, dt.toLocaleDateString(),W));
+  p(ESCPOS.line('Time: '+dt.toLocaleTimeString()));
+  p(ESCPOS.line('Pay:  '+bill.pay.toUpperCase()));
+  p(ESCPOS.dashes(W));
+
+  // Header
+  const nameW=W-8-9;
+  p(ESCPOS.bold(true));
+  p(ESCPOS.line('Item'.padEnd(nameW)+' Qty'.padStart(4)+'  Amount'.padStart(9)));
+  p(ESCPOS.bold(false));
+  p(ESCPOS.dashes(W));
+
+  bill.items.forEach(it=>{
+    const name=it.name.substring(0,nameW).padEnd(nameW);
+    const qty=String(it.qty).padStart(4);
+    const amt=(cur+' '+(it.price*it.qty).toFixed(2)).padStart(9);
+    p(ESCPOS.line(name+qty+amt));
+    if(it.name.length>nameW) p(ESCPOS.line('  '+it.name.substring(nameW)));
+  });
+
+  p(ESCPOS.dashes(W));
+  p(ESCPOS.twoCol('Subtotal:',cur+' '+bill.sub.toFixed(2),W));
+  if(bill.disc>0) p(ESCPOS.twoCol('Discount ('+bill.dp+'%):','- '+cur+' '+bill.disc.toFixed(2),W));
+  if(bill.tax>0)  p(ESCPOS.twoCol('Tax ('+bill.tp+'%):','+ '+cur+' '+bill.tax.toFixed(2),W));
+  p(ESCPOS.dashes(W));
+  p(ESCPOS.bold(true),ESCPOS.doubleH(true));
+  p(ESCPOS.twoCol('TOTAL:',cur+' '+bill.total.toFixed(2),W));
+  p(ESCPOS.doubleH(false),ESCPOS.bold(false));
+  p(ESCPOS.dashes(W));
+
+  p(ESCPOS.alignCenter());
+  p(ESCPOS.line((s.footer||'Thank you for visiting!')));
+  p(ESCPOS.line('Powered by Hotel POS'));
+  p(ESCPOS.feed(4));
+  p(ESCPOS.cut());
+
+  return mergeBytes(...parts);
+}
+
+// ── Text receipt preview for Settings ───────────
+function buildTextReceipt(bill){
+  const s=S.settings,cur=s.cur||'LKR';
+  const W=parseInt(document.getElementById('btPaperWidth')?.value||'48');
+  const L=[];
+  const c=(str)=>str.padStart(Math.floor((W+str.length)/2)).padEnd(W);
+  const d=()=>'-'.repeat(W);
+  L.push(c(s.name||'Hotel POS'));
+  if(s.sub)L.push(c(s.sub));
+  if(s.addr)L.push(c(s.addr));
+  if(s.phone)L.push(c(s.phone));
+  L.push(d());
+  L.push('Bill: '+bill.billNo+'  '+new Date(bill.date).toLocaleDateString());
+  L.push('Pay:  '+bill.pay.toUpperCase());
+  L.push(d());
+  bill.items.forEach(it=>{
+    const name=it.name.substring(0,W-14);
+    L.push(name.padEnd(W-13)+String(it.qty).padStart(3)+'  '+(cur+' '+(it.price*it.qty).toFixed(2)).padStart(9));
+  });
+  L.push(d());
+  const r2=(a,b)=>a.padEnd(W-b.length)+b;
+  L.push(r2('Subtotal:',cur+' '+bill.sub.toFixed(2)));
+  if(bill.disc>0)L.push(r2('Discount('+bill.dp+'%):','- '+cur+' '+bill.disc.toFixed(2)));
+  if(bill.tax>0) L.push(r2('Tax('+bill.tp+'%):','+ '+cur+' '+bill.tax.toFixed(2)));
+  L.push(d());
+  L.push(r2('TOTAL:',cur+' '+bill.total.toFixed(2)));
+  L.push(d());
+  L.push(c(s.footer||'Thank you!'));
+  return L.join('\n');
+}
+
+// ── Write bytes to BT characteristic in chunks ──
+async function btWriteBytes(bytes){
+  const CHUNK=512;
+  for(let i=0;i<bytes.length;i+=CHUNK){
+    await BT.char.writeValueWithoutResponse(bytes.slice(i,i+CHUNK));
+    await new Promise(r=>setTimeout(r,20));
+  }
+}
+
+// ── Connect ──────────────────────────────────────
+async function btConnect(){
+  if(!navigator.bluetooth){
+    toast('Web Bluetooth not supported in this browser','e');
+    return;
+  }
+  btSetStatus('scanning','Scanning for printers...');
+  document.getElementById('btConnBtn').disabled=true;
+  try{
+    const services=BT_UUIDS.map(u=>u.svc);
+    const device=await navigator.bluetooth.requestDevice({
+      filters:[{services:[services[0]]},{services:[services[1]]}],
+      optionalServices:services,
+    }).catch(()=>
+      navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalServices:services})
+    );
+    BT.device=device;
+    btSetStatus('scanning','Connecting to '+device.name+'...');
+    BT.server=await device.gatt.connect();
+
+    // Try each known UUID pair
+    let found=false;
+    for(const {svc,chr} of BT_UUIDS){
+      try{
+        const service=await BT.server.getPrimaryService(svc);
+        BT.char=await service.getCharacteristic(chr);
+        found=true;break;
+      }catch(e){}
+    }
+    if(!found){
+      // Last resort: enumerate all services
+      const svcs=await BT.server.getPrimaryServices();
+      for(const svc of svcs){
+        const chrs=await svc.getCharacteristics();
+        for(const c of chrs){
+          if(c.properties.writeWithoutResponse||c.properties.write){
+            BT.char=c;found=true;break;
+          }
+        }
+        if(found)break;
+      }
+    }
+    if(!found||!BT.char){throw new Error('No writable characteristic found');}
+
+    device.addEventListener('gattserverdisconnected',btOnDisconnect);
+    btSetStatus('connected',device.name||'Thermal Printer','Connected · ESC/POS ready');
+    document.getElementById('btTestBtn').disabled=false;
+    document.getElementById('btDiscBtn').disabled=false;
+    document.getElementById('btConnBtn').textContent='🔄 Reconnect';
+    document.getElementById('btConnBtn').disabled=false;
+    document.getElementById('printFab').classList.add('show');
+    toast('🖨 Printer connected: '+(device.name||'Unknown'),'s');
+  }catch(e){
+    btSetStatus('error','Connection failed','Tap Scan & Connect to try again');
+    document.getElementById('btConnBtn').disabled=false;
+    if(e.name!=='NotFoundError') toast('BT Error: '+e.message,'e');
+    else toast('No printer selected','i');
+  }
+}
+
+function btOnDisconnect(){
+  BT.char=null;BT.server=null;
+  btSetStatus('error','Printer disconnected','Tap Scan & Connect to reconnect');
+  document.getElementById('btTestBtn').disabled=true;
+  document.getElementById('btDiscBtn').disabled=true;
+  document.getElementById('printFab').classList.remove('show');
+  toast('Printer disconnected','e');
+}
+
+async function btDisconnect(){
+  if(BT.device&&BT.device.gatt.connected) BT.device.gatt.disconnect();
+  BT.device=null;BT.server=null;BT.char=null;
+  btSetStatus('off','No printer connected','Tap Scan & Connect to pair');
+  document.getElementById('btTestBtn').disabled=true;
+  document.getElementById('btDiscBtn').disabled=true;
+  document.getElementById('btConnBtn').textContent='📡 Scan & Connect Printer';
+  document.getElementById('printFab').classList.remove('show');
+  toast('Printer disconnected','i');
+}
+
+function btSetStatus(state,name,sub){
+  const dot=document.getElementById('btDot');
+  const nm=document.getElementById('btDevName');
+  const sb=document.getElementById('btDevSub');
+  dot.className='bt-dot'+(state==='connected'?' connected':state==='scanning'?' scanning':state==='error'?' error':'');
+  nm.textContent=name||'No printer connected';
+  if(sub)sb.textContent=sub;
+}
+
+// ── Print a bill via BT ──────────────────────────
+async function btPrint(bill){
+  if(!BT.char){toast('Printer not connected','e');return;}
+  try{
+    const bytes=buildEscPosReceipt(bill);
+    await btWriteBytes(bytes);
+    BT.lastBill=bill;
+    // Show preview in settings if visible
+    const prev=document.getElementById('btReceiptPreview');
+    const area=document.getElementById('btTestArea');
+    if(prev){prev.textContent=buildTextReceipt(bill);area.style.display='block';}
+    toast('🖨 Receipt printed','s');
+  }catch(e){
+    toast('Print failed: '+e.message,'e');
+  }
+}
+
+async function btTest(){
+  // Print a test receipt
+  const testBill={
+    billNo:'TEST-001',
+    date:new Date().toISOString(),
+    items:[
+      {name:'Test Item A',emoji:'🍽',price:500,qty:2},
+      {name:'Test Item B',emoji:'☕',price:280,qty:1},
+    ],
+    sub:1280,dp:0,disc:0,tp:10,tax:128,total:1408,pay:'cash'
+  };
+  await btPrint(testBill);
+}
+
+async function btPrintLastBill(){
+  const bill=S.bills[0];
+  if(!bill){toast('No bills yet','i');return;}
+  if(!BT.char){toast('Printer not connected — go to Settings → Bluetooth Printer','e');return;}
+  await btPrint(bill);
+}
+
+function saveBtSettings(){
+  const auto=document.getElementById('btAutoPrint').checked;
+  const width=document.getElementById('btPaperWidth').value;
+  S.settings.btAutoPrint=auto;
+  S.settings.btPaperWidth=width;
+  // Update toggle visual
+  const thumb=document.getElementById('btToggleThumb');
+  const span=document.getElementById('btToggleSpan');
+  if(thumb){
+    thumb.style.transform=auto?'translateX(18px)':'translateX(0)';
+    thumb.style.background=auto?'#0d1117':getComputedStyle(document.documentElement).getPropertyValue('--text3');
+    span.style.background=auto?'var(--accent)':'var(--bg4)';
+  }
+  save();
+}
+
+function applyBtSettings(){
+  const s=S.settings;
+  const auto=s.btAutoPrint||false;
+  const width=s.btPaperWidth||'48';
+  const cb=document.getElementById('btAutoPrint');
+  const sel=document.getElementById('btPaperWidth');
+  if(cb){cb.checked=auto;saveBtSettings();}
+  if(sel)sel.value=width;
 }
 
 // ══════════ PRODUCTS LIST ══════════
