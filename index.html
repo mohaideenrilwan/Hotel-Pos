@@ -542,7 +542,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);disp
 
 <script>
 // ══════════ STATE ══════════
-let S={products:[],bills:[],returns:[],settings:{},cart:[],payment:'cash',billN:1,retN:1,activeCat:'All',gToken:null,editing:null};
+let S={products:[],bills:[],returns:[],settings:{},cart:[],payment:'cash',billN:1,retN:1,activeCat:'All',gToken:null,editing:null,gasConnected:false};
 
 // ══════════ BOOT ══════════
 function boot(){
@@ -555,10 +555,9 @@ function boot(){
   applyBtSettings();
   const od=document.getElementById('originDisplay');
   if(od)od.textContent=location.origin;
-  // Auto-connect GAS on every load — no cancel needed
-  if(S.settings.gasUrl){
-    setTimeout(()=>gasAutoConnect(),800);
-  }
+  // Auto-connect on every load — immediate + retry
+  gasAutoConnect();
+  setInterval(()=>{if(!S.gasConnected)gasAutoConnect();},30000);
 }
 
 function copyOrigin(){
@@ -1094,6 +1093,7 @@ function renderBills(){
     <div class="lc-actions">
       <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();printBill(S.bills.find(x=>x.billNo==='${b.billNo}'))">🖨 Print</button>
       <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();startRet('${b.billNo}')">↩ Return</button>
+      <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteBill('${b.billNo}')">🗑 Delete</button>
     </div>
   </div>`).join('');
 }
@@ -1118,11 +1118,18 @@ function viewBill(billNo){
       ${b.tax>0?`<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--text2)">Tax (${b.tp}%)</span><span>+ ${cur} ${b.tax.toFixed(2)}</span></div>`:''}
       <div style="display:flex;justify-content:space-between;border-top:1px solid var(--border);margin-top:8px;padding-top:8px;font-size:16px;font-weight:700"><span>Total</span><span style="color:var(--accent)">${cur} ${b.total.toFixed(2)}</span></div>
     </div>
-    <div style="display:flex;gap:8px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn btn-primary" style="flex:1" onclick="printBill(S.bills.find(x=>x.billNo==='${billNo}'))">🖨 Print</button>
       <button class="btn btn-ghost" style="flex:1" onclick="startRet('${billNo}');closeM('billModal')">↩ Return</button>
+      <button class="btn btn-danger" style="flex:1" onclick="deleteBill('${billNo}');closeM('billModal')">🗑 Delete</button>
     </div>`;
   openM('billModal');
+}
+
+function deleteBill(billNo){
+  if(!confirm('Delete bill '+billNo+'? This cannot be undone.'))return;
+  S.bills=S.bills.filter(b=>b.billNo!==billNo);
+  save();renderBills();toast('Bill '+billNo+' deleted','i');
 }
 
 // ══════════ RETURNS ══════════
@@ -1318,22 +1325,24 @@ async function gasCall(action,payload={}){
 
 // Auto-connect silently on load/save — shows status dot, no popup
 async function gasAutoConnect(){
+  const dot=document.getElementById('syncDot');
+  if(dot)dot.className='sync-dot syncing';
+  S.gasConnected=false;
   try{
-    document.getElementById('syncDot').className='sync-dot syncing';
     const d=await gasCall('ping');
     if(d.ok){
-      document.getElementById('syncDot').className='sync-dot';
+      S.gasConnected=true;
+      if(dot)dot.className='sync-dot';
       setGasBox('ok','✅ Connected to "'+d.title+'" · Sheets: '+d.sheets.join(', '));
       gasValidate();
+      toast('☁ Sheet connected','s');
     } else {
-      document.getElementById('syncDot').className='sync-dot off';
-      setGasBox('err','❌ '+(d.error||'Connection failed'));
+      if(dot)dot.className='sync-dot off';
+      setGasBox('err','❌ '+(d.error||'Connection failed — check Web App deployment'));
     }
   }catch(e){
-    document.getElementById('syncDot').className='sync-dot off';
-    // Silently fail on boot — user can tap Test Connection manually
-    const gasBox=document.getElementById('gasStatus');
-    if(gasBox&&gasBox.className.includes('info'))setGasBox('err','⚠ Auto-connect failed: '+e.message+' — tap Test Connection');
+    if(dot)dot.className='sync-dot off';
+    setGasBox('err','⚠ Cannot reach Sheet: '+e.message);
   }
 }
 
@@ -1385,17 +1394,23 @@ async function gasPull(){
 }
 
 async function gasAppendBill(bill){
-  if(!S.settings.gasUrl)return;
-  try{await gasCall('appendBill',{bill,bSheet:S.settings.gasBSheet||'Bills'});}catch(e){console.warn('gasAppendBill:',e.message);}
+  if(!S.settings.gasUrl&&!GAS_DEFAULT_URL)return;
+  if(!S.gasConnected)await gasAutoConnect();
+  try{
+    const d=await gasCall('appendBill',{bill,bSheet:S.settings.gasBSheet||'Bills'});
+    if(d&&d.ok){const dot=document.getElementById('syncDot');if(dot)dot.className='sync-dot';}
+  }catch(e){console.warn('gasAppendBill:',e.message);const dot=document.getElementById('syncDot');if(dot)dot.className='sync-dot off';}
 }
 
 async function gasAppendReturn(ret){
-  if(!S.settings.gasUrl)return;
+  if(!S.settings.gasUrl&&!GAS_DEFAULT_URL)return;
+  if(!S.gasConnected)await gasAutoConnect();
   try{await gasCall('appendReturn',{ret,rSheet:S.settings.gasRSheet||'Returns'});}catch(e){console.warn('gasAppendReturn:',e.message);}
 }
 
 async function gasAppendProduct(prod){
-  if(!S.settings.gasUrl)return;
+  if(!S.settings.gasUrl&&!GAS_DEFAULT_URL)return;
+  if(!S.gasConnected)await gasAutoConnect();
   try{await gasCall('appendProduct',{prod,pSheet:S.settings.gasPSheet||'Products'});}catch(e){console.warn('gasAppendProduct:',e.message);}
 }
 
